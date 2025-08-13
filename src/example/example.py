@@ -14,8 +14,6 @@ routelit_adapter = RouteLitFlaskAdapter(
     ### TO USE LOCAL VITE DEV SERVER, UNCOMMENT THE FOLLOWING LINES
     run_mode="dev_components",
     local_components_server="http://localhost:5173",
-    # run_mode="dev_client",
-    # local_components_server="http://localhost:5173"
 ).configure(app)
 
 drawer = create_drawer_decorator(rl)
@@ -85,7 +83,7 @@ def chip_fragment(ui: RLBuilder) -> None:
     }
     language_selected = ui.chip_group(
         key="languages_chipgroup",
-        options=list(languages.keys()) + [{"label": "All", "value": "all", "color": "red"}],
+        options=list(languages.keys()) + [{"label": "All", "value": "all", "color": "red"}],  # noqa: RUF005
         multiple=True,
         format_func=lambda value: languages.get(value, value),
         on_change=lambda value: print(f"Chip group value changed to {value}"),
@@ -327,7 +325,7 @@ def combobox_fragment(ui: RLBuilder) -> None:
 
 
 @rl.fragment("buttons")
-def buttons_fragment(ui: RLBuilder) -> None:
+def buttons_fragment(ui: RLBuilder) -> None:  # noqa: C901
     ui.header("Buttons")
     if ui.button("Click me a", on_click=lambda: print("Hello")):
         ui.text("Hello")
@@ -601,7 +599,7 @@ def example_drawer(ui: RLBuilder) -> None:
 
 
 @rl.fragment("overlays")
-def overlays_fragment(ui: RLBuilder) -> None:
+def overlays_fragment(ui: RLBuilder) -> None:  # noqa: C901
     is_dialog_open = ui.button("show dialog")
     print("is_dialog_open", is_dialog_open)
 
@@ -1146,6 +1144,7 @@ def dates_view(ui: RLBuilder) -> None:
             )
             ui.text(f"Date range picker input: {date_range2}")
 
+
 fruits_data = [
     {
         "date": "Mar 22",
@@ -1178,6 +1177,7 @@ fruits_data = [
         "Tomatoes": 2290,
     },
 ]
+
 
 def area_chart_view(ui: RLBuilder) -> None:
     ui.set_page_config(page_title="Area Chart")
@@ -1309,6 +1309,7 @@ def bar_chart_view(ui: RLBuilder) -> None:
         h=300,
     )
 
+
 def line_chart_view(ui: RLBuilder) -> None:
     ui.set_page_config(page_title="Line Chart")
     with ui.sidebar:
@@ -1328,18 +1329,18 @@ def line_chart_view(ui: RLBuilder) -> None:
     )
     ui.header("Gradient type")
     data = [
-        { "date": 'Jan', "temperature": -25 },
-        { "date": 'Feb', "temperature": -10 },
-        { "date": 'Mar', "temperature": 5 },
-        { "date": 'Apr', "temperature": 15 },
-        { "date": 'May', "temperature": 30 },
-        { "date": 'Jun', "temperature": 15 },
-        { "date": 'Jul', "temperature": 30 },
-        { "date": 'Aug', "temperature": 40 },
-        { "date": 'Sep', "temperature": 15 },
-        { "date": 'Oct', "temperature": 20 },
-        { "date": 'Nov', "temperature": 0 },
-        { "date": 'Dec', "temperature": -10 },
+        {"date": "Jan", "temperature": -25},
+        {"date": "Feb", "temperature": -10},
+        {"date": "Mar", "temperature": 5},
+        {"date": "Apr", "temperature": 15},
+        {"date": "May", "temperature": 30},
+        {"date": "Jun", "temperature": 15},
+        {"date": "Jul", "temperature": 30},
+        {"date": "Aug", "temperature": 40},
+        {"date": "Sep", "temperature": 15},
+        {"date": "Oct", "temperature": 20},
+        {"date": "Nov", "temperature": 0},
+        {"date": "Dec", "temperature": -10},
     ]
     ui.line_chart(
         data=data,
@@ -1357,17 +1358,17 @@ def line_chart_view(ui: RLBuilder) -> None:
         ],
         stroke_width=5,
         curve_type="natural",
-        y_axis_props={"domain": [-25, 40]}
+        y_axis_props={"domain": [-25, 40]},
     )
     ui.header("Right Y axis")
     biaxialData = [
-        { "name": 'Page A', "uv": 4000, "pv": 2400 },
-        { "name": 'Page B', "uv": 3000, "pv": 1398 },
-        { "name": 'Page C', "uv": 2000, "pv": 9800 },
-        { "name": 'Page D', "uv": 2780, "pv": 3908 },
-        { "name": 'Page E', "uv": 1890, "pv": 4800 },
-        { "name": 'Page F', "uv": 2390, "pv": 3800 },
-        { "name": 'Page G', "uv": 3490, "pv": 4300 },
+        {"name": "Page A", "uv": 4000, "pv": 2400},
+        {"name": "Page B", "uv": 3000, "pv": 1398},
+        {"name": "Page C", "uv": 2000, "pv": 9800},
+        {"name": "Page D", "uv": 2780, "pv": 3908},
+        {"name": "Page E", "uv": 1890, "pv": 4800},
+        {"name": "Page F", "uv": 2390, "pv": 3800},
+        {"name": "Page G", "uv": 3490, "pv": 4300},
     ]
     ui.line_chart(
         data=biaxialData,
@@ -1382,6 +1383,7 @@ def line_chart_view(ui: RLBuilder) -> None:
         right_y_axis_label="pv",
     )
 
+
 def composite_chart_view(ui: RLBuilder) -> None:
     ui.set_page_config(page_title="Composite Chart")
     with ui.sidebar:
@@ -1391,21 +1393,24 @@ def composite_chart_view(ui: RLBuilder) -> None:
         data=fruits_data,
         data_key="date",
         series=[
-            { "name": "Tomatoes", "color": "rgba(18, 120, 255, 0.2)", "type": "bar" },
-            { "name": "Apples", "color": "red.8", "type": "line" },
-            { "name": "Oranges", "color": "yellow.8", "type": "area" },
+            {"name": "Tomatoes", "color": "rgba(18, 120, 255, 0.2)", "type": "bar"},
+            {"name": "Apples", "color": "red.8", "type": "line"},
+            {"name": "Oranges", "color": "yellow.8", "type": "area"},
         ],
         max_bar_width=30,
         h=300,
         curve_type="linear",
     )
 
+
 countries_data = [
-    { "name": 'USA', "value": 400, "color": 'indigo.6' },
-    { "name": 'India', "value": 300, "color": 'yellow.6' },
-    { "name": 'Japan', "value": 100, "color": 'teal.6' },
-    { "name": 'Other', "value": 200, "color": 'gray.6' },
+    {"name": "USA", "value": 400, "color": "indigo.6"},
+    {"name": "India", "value": 300, "color": "yellow.6"},
+    {"name": "Japan", "value": 100, "color": "teal.6"},
+    {"name": "Other", "value": 200, "color": "gray.6"},
 ]
+
+
 def donut_chart_view(ui: RLBuilder) -> None:
     ui.set_page_config(page_title="Donut Chart")
     with ui.sidebar:
@@ -1417,6 +1422,7 @@ def donut_chart_view(ui: RLBuilder) -> None:
         labels_type="value",
         with_labels=True,
     )
+
 
 def pie_chart_view(ui: RLBuilder) -> None:
     ui.set_page_config(page_title="Pie Chart")
@@ -1440,8 +1446,9 @@ def pie_chart_view(ui: RLBuilder) -> None:
         with_labels=True,
         with_tooltip=True,
         tooltip_data_source="segment",
-        mx="auto"
+        mx="auto",
     )
+
 
 def radar_chart_view(ui: RLBuilder) -> None:
     ui.set_page_config(page_title="Radar Chart")
@@ -1450,32 +1457,32 @@ def radar_chart_view(ui: RLBuilder) -> None:
     ui.title("Radar Chart")
     sales = [
         {
-            "product": 'Apples',
+            "product": "Apples",
             "Sales January": 120,
             "Sales February": 100,
         },
         {
-            "product": 'Oranges',
+            "product": "Oranges",
             "Sales January": 98,
             "Sales February": 90,
         },
         {
-            "product": 'Tomatoes',
+            "product": "Tomatoes",
             "Sales January": 86,
             "Sales February": 70,
         },
         {
-            "product": 'Grapes',
+            "product": "Grapes",
             "Sales January": 99,
             "Sales February": 80,
         },
         {
-            "product": 'Bananas',
+            "product": "Bananas",
             "Sales January": 85,
             "Sales February": 120,
         },
         {
-            "product": 'Lemons',
+            "product": "Lemons",
             "Sales January": 65,
             "Sales February": 150,
         },
@@ -1491,9 +1498,13 @@ def radar_chart_view(ui: RLBuilder) -> None:
     ui.radar_chart(
         data=sales,
         data_key="product",
-        series=[{"name": "Sales January", "color": "indigo.6", "opacity": 0.5}, {"name": "Sales February", "color": "blue.6", "opacity": 0.5}],
+        series=[
+            {"name": "Sales January", "color": "indigo.6", "opacity": 0.5},
+            {"name": "Sales February", "color": "blue.6", "opacity": 0.5},
+        ],
         h=300,
     )
+
 
 def scatter_chart_view(ui: RLBuilder) -> None:
     ui.set_page_config(page_title="Scatter Chart")
@@ -1501,13 +1512,12 @@ def scatter_chart_view(ui: RLBuilder) -> None:
         sidebar_view(ui)
     ui.title("Scatter Chart")
     import random
+
     group_data = [
         {
-            "color": 'blue.5',
-            "name": 'Group 1',
-            "data": [
-                { "age": random.randint(18, 65), "BMI": random.randint(10, 40) } for _ in range(10)
-            ]
+            "color": "blue.5",
+            "name": "Group 1",
+            "data": [{"age": random.randint(18, 65), "BMI": random.randint(10, 40)} for _ in range(10)],  # noqa: S311
         }
     ]
     ui.scatter_chart(
@@ -1520,19 +1530,15 @@ def scatter_chart_view(ui: RLBuilder) -> None:
     ui.header("Multiple groups")
     group_data = [
         {
-            "color": 'blue.5',
-            "name": 'Group 1',
-            "data": [
-                { "age": random.randint(18, 65), "BMI": random.randint(10, 40) } for _ in range(10)
-            ]
+            "color": "blue.5",
+            "name": "Group 1",
+            "data": [{"age": random.randint(18, 65), "BMI": random.randint(10, 40)} for _ in range(10)],  # noqa: S311
         },
         {
-            "color": 'red.5',
-            "name": 'Group 2',
-            "data": [
-                { "age": random.randint(18, 65), "BMI": random.randint(10, 40) } for _ in range(10)
-            ]
-        }
+            "color": "red.5",
+            "name": "Group 2",
+            "data": [{"age": random.randint(18, 65), "BMI": random.randint(10, 40)} for _ in range(10)],  # noqa: S311
+        },
     ]
     ui.scatter_chart(
         data=group_data,
@@ -1542,6 +1548,7 @@ def scatter_chart_view(ui: RLBuilder) -> None:
         h=300,
         with_legend=True,
     )
+
 
 def funnel_chart_view(ui: RLBuilder) -> None:
     ui.set_page_config(page_title="Funnel Chart")
@@ -1556,20 +1563,21 @@ def funnel_chart_view(ui: RLBuilder) -> None:
         mx="auto",
     )
 
+
 def bubble_chart_view(ui: RLBuilder) -> None:
     ui.set_page_config(page_title="Bubble Chart")
     with ui.sidebar:
         sidebar_view(ui)
     ui.title("Bubble Chart")
     data = [
-        { "hour": '08:00', "index": 1, "value": 150 },
-        { "hour": '10:00', "index": 2, "value": 166 },
-        { "hour": '12:00', "index": 3, "value": 170 },
-        { "hour": '14:00', "index": 4, "value": 150 },
-        { "hour": '16:00', "index": 2, "value": 200 },
-        { "hour": '18:00', "index": 4, "value": 400 },
-        { "hour": '20:00', "index": 3, "value": 100 },
-        { "hour": '22:00', "index": 1, "value": 160 },
+        {"hour": "08:00", "index": 1, "value": 150},
+        {"hour": "10:00", "index": 2, "value": 166},
+        {"hour": "12:00", "index": 3, "value": 170},
+        {"hour": "14:00", "index": 4, "value": 150},
+        {"hour": "16:00", "index": 2, "value": 200},
+        {"hour": "18:00", "index": 4, "value": 400},
+        {"hour": "20:00", "index": 3, "value": 100},
+        {"hour": "22:00", "index": 1, "value": 160},
     ]
     ui.bubble_chart(
         data=data,
@@ -1580,19 +1588,20 @@ def bubble_chart_view(ui: RLBuilder) -> None:
         h=300,
     )
 
+
 def radial_bar_chart_view(ui: RLBuilder) -> None:
     ui.set_page_config(page_title="Radial Bar Chart")
     with ui.sidebar:
         sidebar_view(ui)
     ui.title("Radial Bar Chart")
     data = [
-        { "name": '18-24', "value": 31.47, "color": 'blue.7' },
-        { "name": '25-29', "value": 26.69, "color": 'orange.6' },
-        { "name": '30-34', "value": 15.69, "color": 'yellow.7' },
-        { "name": '35-39', "value": 8.22, "color": 'cyan.6' },
-        { "name": '40-49', "value": 8.63, "color": 'green' },
-        { "name": '50+', "value": 2.63, "color": 'pink' },
-        { "name": 'unknown', "value": 6.67, "color": 'gray' },
+        {"name": "18-24", "value": 31.47, "color": "blue.7"},
+        {"name": "25-29", "value": 26.69, "color": "orange.6"},
+        {"name": "30-34", "value": 15.69, "color": "yellow.7"},
+        {"name": "35-39", "value": 8.22, "color": "cyan.6"},
+        {"name": "40-49", "value": 8.63, "color": "green"},
+        {"name": "50+", "value": 2.63, "color": "pink"},
+        {"name": "unknown", "value": 6.67, "color": "gray"},
     ]
     ui.radial_bar_chart(
         data=data,
@@ -1600,6 +1609,7 @@ def radial_bar_chart_view(ui: RLBuilder) -> None:
         h=220,
         with_legend=True,
     )
+
 
 def sparkline_chart_view(ui: RLBuilder) -> None:
     ui.set_page_config(page_title="Sparkline Chart")
@@ -1651,7 +1661,7 @@ def heatmap_view(ui: RLBuilder) -> None:
     data = {}
     for i in range(365):
         date_str = (start_date + timedelta(days=i)).strftime("%Y-%m-%d")
-        data[date_str] = random.randint(0, 10)
+        data[date_str] = random.randint(0, 10)  # noqa: S311
     min_date = min(data.keys())
     max_date = max(data.keys())
     get_tooltip_label = """
@@ -1674,12 +1684,12 @@ def heatmap_view(ui: RLBuilder) -> None:
 
     with ui.scroll_area():
         colors = [
-            'yellow',
-            'var(--mantine-color-orange-4)',
-            'var(--mantine-color-orange-6)',
-            'var(--mantine-color-orange-7)',
-            'var(--mantine-color-orange-9)',
-            'brown'
+            "yellow",
+            "var(--mantine-color-orange-4)",
+            "var(--mantine-color-orange-6)",
+            "var(--mantine-color-orange-7)",
+            "var(--mantine-color-orange-9)",
+            "brown",
         ]
         ui.heatmap(
             data=data,

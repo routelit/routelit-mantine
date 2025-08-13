@@ -5,7 +5,7 @@ import { IconLoader, IconFileUnknown } from '@tabler/icons-react'; // Fallback i
 /**
  * DynamicTablerIcon is a component that loads and displays Tabler icons dynamically.
  * It uses React.lazy to load the icons and Suspense to handle loading states.
- * 
+ *
  * @param name - The name of the icon to load.
  * @param props - The props to pass to the icon.
  * @returns The icon component.

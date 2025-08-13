@@ -18,8 +18,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
-    "routelit"
-    # "routelit>=0.5.2",
+    "routelit>=0.5.7",
 ]
 
 
@@ -31,24 +30,19 @@ Documentation = "https://routelit.github.io/routelit-mantine/"
 [dependency-groups]
 dev = [
     "pytest>=7.2.0",
+    "pytest-cov>=4.1.0",
     "pre-commit>=2.20.0",
     "tox-uv>=1.11.3",
-    
+
     "mypy>=0.991",
-    
+
     "ruff>=0.11.5",
     "mkdocs>=1.4.2",
     "mkdocs-material>=8.5.10",
     "mkdocstrings[python]>=0.26.1",
     "routelit-flask>=0.4.3",
-    # "routelit-flask",
     "flask>=2.0.0",
 ]
-
-
-[tool.uv.sources]
-routelit = { path = "../routelit", editable = true }
-# routelit-flask = { path = "../routelit-flask", editable = true }
 
 [build-system]
 requires = ["hatchling"]
@@ -56,6 +50,9 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/routelit_mantine"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
 
 [tool.mypy]
 files = [
@@ -70,10 +67,6 @@ warn_return_any = true
 warn_unused_ignores = true
 show_error_codes = true
 
-# [[tool.mypy.overrides]]
-# module = ["routelit", "routelit.*"]
-# ignore_missing_imports = true
-
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
@@ -81,6 +74,7 @@ testpaths = ["tests"]
 target-version = "py39"
 line-length = 120
 fix = true
+exclude = ["src/frontend"]
 
 [tool.ruff.lint]
 select = [
@@ -127,5 +121,3 @@ ignore = [
 
 [tool.ruff.format]
 preview = true
-
-

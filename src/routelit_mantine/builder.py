@@ -1,8 +1,7 @@
 import datetime
 from typing import Any, Callable, ClassVar, Literal, Optional, TypedDict, Union, cast
 
-from routelit import AssetTarget, RouteLitBuilder
-from routelit.domain import RLOption, RouteLitElement
+from routelit import AssetTarget, RLOption, RouteLitBuilder, RouteLitElement
 
 
 class GroupOption(TypedDict):
@@ -3349,7 +3348,7 @@ class RLBuilder(RouteLitBuilder):
         scroll_hide_delay: Optional[int] = None,
         scrollbar_size: Optional[Union[str, int]] = None,
         scrollbars: Optional[Union[bool, Literal["x", "y", "xy"]]] = None,
-        type: Optional[Literal["auto", "scroll", "always", "hover", "never"]] = None,
+        type: Optional[Literal["auto", "scroll", "always", "hover", "never"]] = None,  # noqa: A002
         viewport_props: Optional[dict[str, Any]] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
@@ -3644,7 +3643,7 @@ class RLBuilder(RouteLitBuilder):
         previous_icon: Optional[RouteLitElement] = None,
         previous_label: Optional[str] = None,
         size: Optional[str] = None,
-        type: Optional[Literal["default", "range", "multiple"]] = None,
+        type: Optional[Literal["default", "range", "multiple"]] = None,  # noqa: A002
         weekday_format: Optional[str] = None,
         weekend_days: Optional[list[Literal[0, 1, 2, 3, 4, 5, 6]]] = None,
         with_cell_spacing: Optional[bool] = None,
@@ -3813,7 +3812,7 @@ class RLBuilder(RouteLitBuilder):
         right_section_width: Optional[str] = None,
         size: Optional[str] = None,
         sort_dates: Optional[bool] = None,
-        type: Optional[str] = None,
+        type: Optional[str] = None,  # noqa: A002
         value_format: Optional[str] = None,
         weekday_format: Optional[str] = None,
         weekend_days: Optional[list] = None,
@@ -4053,7 +4052,7 @@ class RLBuilder(RouteLitBuilder):
         tick_line: Optional[str] = None,
         tooltip_animation_duration: int = 0,
         tooltip_props: Optional[dict[str, Any]] = None,
-        type: Optional[str] = None,
+        type: Optional[str] = None,  # noqa: A002
         unit: Optional[str] = None,
         with_dots: Optional[bool] = None,
         with_gradient: Optional[bool] = None,
@@ -4195,7 +4194,7 @@ class RLBuilder(RouteLitBuilder):
         tick_line: Optional[Literal["none", "x", "y", "xy"]] = None,
         tooltip_animation_duration: Optional[int] = None,
         tooltip_props: Optional[dict[str, Any]] = None,
-        type: Optional[str] = None,
+        type: Optional[str] = None,  # noqa: A002
         unit: Optional[str] = None,
         value_label_props: Optional[dict[str, Any]] = None,
         with_bar_value_label: Optional[bool] = None,
@@ -4331,7 +4330,7 @@ class RLBuilder(RouteLitBuilder):
         tick_line: Optional[str] = None,
         tooltip_animation_duration: Optional[int] = None,
         tooltip_props: Optional[dict[str, Any]] = None,
-        type: Optional[str] = None,
+        type: Optional[str] = None,  # noqa: A002
         unit: Optional[str] = None,
         with_dots: Optional[bool] = None,
         with_legend: Optional[bool] = None,
@@ -5014,7 +5013,7 @@ class RLBuilder(RouteLitBuilder):
         self,
         data: list[dict[str, Any]],
         data_key: dict[str, str],
-        range: tuple[int, int],
+        range: tuple[int, int],  # noqa: A002
         *,
         color: Optional[str] = None,
         grid_color: Optional[str] = None,

@@ -127,4 +127,3 @@ Visit `http://127.0.0.1:5000/` and explore the pages (Layouts, Inputs, Combobox,
 ## License
 
 APACHE 2.0 — see the LICENSE file in the repository.
-
