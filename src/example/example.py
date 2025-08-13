@@ -730,6 +730,7 @@ def view(ui: RLBuilder) -> None:
 @rl.fragment("sidebar_view")
 def sidebar_view(ui: RLBuilder) -> None:
     ui.set_provider_props(theme={"primaryColor": "green"})
+    ui.set_app_shell_props(title="Mantine RouteLit", navbar_props={"width": 200})
     with ui.scroll_area():
         ui.nav_link(
             href="/",

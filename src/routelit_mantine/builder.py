@@ -6,11 +6,19 @@ from routelit.domain import RLOption, RouteLitElement
 
 
 class GroupOption(TypedDict):
+    """
+    A group option for a checkbox group.
+    """
+
     group: str
     items: list[str]
 
 
 class MTTab(TypedDict, total=False):
+    """
+    A tab for a tablist.
+    """
+
     value: str
     label: Optional[str]
     color: Optional[str]
@@ -41,10 +49,9 @@ class RLBuilder(RouteLitBuilder):
             name="provider",
             key="provider",
             props={
-                # "forceColorScheme": "dark",
                 "defaultColorScheme": "auto",
                 "theme": {
-                    # "primaryColor": "orange",
+                    "primaryColor": "orange",
                 },
             },
             virtual=True,
@@ -89,16 +96,77 @@ class RLBuilder(RouteLitBuilder):
         self.active_child_builder = self._main
 
     def set_provider_props(self, theme: dict[str, Any], **kwargs: Any) -> None:
+        """
+        Set the provider props.
+
+        Args:
+            theme (dict[str, Any]): The theme to set.
+            kwargs: Additional props to set.
+        """
         self._root.root_element.props.update(kwargs)
         self._root.root_element.props["theme"] = theme
 
+    def set_app_shell_props(
+        self,
+        title: Optional[str] = None,
+        logo: Optional[str] = None,
+        navbar_props: Optional[dict[str, Any]] = None,
+        **kwargs: Any,
+    ) -> None:
+        """
+        Set the app shell props.
+
+        Args:
+            title (Optional[str]): The title of the app shell.
+            logo (Optional[str]): The logo of the app shell.
+            navbar_props (Optional[dict[str, Any]]): The props of the navbar.
+            kwargs: Additional props to set.
+        """
+        self._app_shell.root_element.props.update(kwargs)
+        self._app_shell.root_element.props["title"] = title
+        self._app_shell.root_element.props["logo"] = logo
+        self._app_shell.root_element.props["navbarProps"] = navbar_props
+
     @property
     def sidebar(self) -> "RLBuilder":
+        """
+        Get the sidebar builder.
+
+        Returns:
+            RLBuilder: The sidebar builder.
+
+        Example:
+        ```python
+        with ui.sidebar:
+            ui.subheader("Sidebar")
+
+        # or
+
+        ui.sidebar.subheader("Sidebar")
+        ```
+        """
         return self._navbar
 
     def container(  # type: ignore[override]
         self, *, fluid: bool = False, key: Optional[str] = None, size: Optional[str] = None, **kwargs: Any
     ) -> "RLBuilder":
+        """
+        Create a container.
+
+        Args:
+            fluid (bool): Whether the container is fluid.
+            key (Optional[str]): The key of the container.
+            size (Optional[str]): The size of the container.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: The container builder.
+
+        Example:
+        ```python
+        with ui.container(fluid=True, size="xl", bg="var(--mantine-color-blue-light)"):
+            ui.text("Hello World")
+        """
         new_element = self._create_element(
             key=key or self._new_text_id("container"),
             name="container",
@@ -119,6 +187,23 @@ class RLBuilder(RouteLitBuilder):
         wrap: Optional[str] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Create a flex.
+
+        Args:
+            align (Optional[str]): The alignment of the flex.
+            column_gap (Optional[str]): The gap between columns.
+            direction (Optional[str]): The direction of the flex.
+            gap (Optional[str]): The gap between items.
+            justify (Optional[str]): The justification of the flex.
+            key (Optional[str]): The key of the flex.
+            row_gap (Optional[str]): The gap between rows.
+            wrap (Optional[str]): The wrapping of the flex.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: The flex builder.
+        """
         new_element = self._create_element(
             key=key or self._new_text_id("flex"),
             name="flex",
@@ -149,6 +234,24 @@ class RLBuilder(RouteLitBuilder):
         query_type: Optional[Literal["media", "container"]] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Create a responsive grid container.
+
+        Args:
+            align (Optional[str]): Vertical alignment of grid content.
+            breakpoints (Optional[dict]): Responsive column settings per breakpoint.
+            columns (Optional[int]): Number of columns.
+            grow (Optional[bool]): Whether columns should grow to fill available space.
+            gutter (Optional[dict]): Spacing configuration between columns/rows.
+            justify (Optional[str]): Horizontal justification of grid content.
+            key (Optional[str]): Explicit element key.
+            overflow (Optional[str]): Overflow behavior.
+            query_type (Optional[Literal["media", "container"]]): Type of responsive query to use.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the created grid element.
+        """
         new_element = self._create_element(
             key=key or self._new_text_id("grid"),
             name="grid",
@@ -175,6 +278,19 @@ class RLBuilder(RouteLitBuilder):
         span: Optional[int] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Add a grid column inside the nearest grid.
+
+        Args:
+            key (Optional[str]): Explicit element key.
+            offset (Optional[int]): Column offset.
+            order (Optional[int]): Column order.
+            span (Optional[int]): How many columns the item spans.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the grid column element.
+        """
         new_element = self._create_element(
             key=key or self._new_text_id("gridcol"),
             name="gridcol",
@@ -199,6 +315,22 @@ class RLBuilder(RouteLitBuilder):
         wrap: Optional[str] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Arrange children horizontally with spacing and alignment.
+
+        Args:
+            align (Optional[str]): Vertical alignment of items.
+            gap (Optional[str]): Spacing between items.
+            grow (Optional[bool]): Allow items to grow to fill the row.
+            justify (Optional[str]): Horizontal alignment of items.
+            key (Optional[str]): Explicit element key.
+            prevent_grow_overflow (Optional[bool]): Prevent overflow when items grow.
+            wrap (Optional[str]): Wrapping behavior.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the group element.
+        """
         new_element = self._create_element(
             key=key or self._new_text_id("group"),
             name="group",
@@ -224,6 +356,20 @@ class RLBuilder(RouteLitBuilder):
         vertical_spacing: Optional[str] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Create a simplified responsive grid.
+
+        Args:
+            cols (Optional[int]): Number of columns.
+            key (Optional[str]): Explicit element key.
+            query_type (Optional[Literal["media", "container"]]): Responsive query type.
+            spacing (Optional[str]): Spacing between items.
+            vertical_spacing (Optional[str]): Vertical spacing between rows.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the simple grid element.
+        """
         new_element = self._create_element(
             key=key or self._new_text_id("simplegrid"),
             name="simplegrid",
@@ -245,6 +391,15 @@ class RLBuilder(RouteLitBuilder):
         v: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
+        """
+        Insert vertical and/or horizontal space.
+
+        Args:
+            h (Optional[str]): Horizontal space size (e.g., CSS length).
+            key (Optional[str]): Explicit element key.
+            v (Optional[str]): Vertical space size (e.g., CSS length).
+            kwargs: Additional props to set.
+        """
         self._create_element(
             key=key or self._new_text_id("space"),
             name="space",
@@ -260,6 +415,19 @@ class RLBuilder(RouteLitBuilder):
         key: Optional[str] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Stack children vertically with spacing and alignment.
+
+        Args:
+            align (Optional[str]): Horizontal alignment of items.
+            gap (Optional[str]): Spacing between items.
+            justify (Optional[str]): Vertical alignment of items.
+            key (Optional[str]): Explicit element key.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the stack element.
+        """
         new_element = self._create_element(
             key=key or self._new_text_id("stack"),
             name="stack",
@@ -291,6 +459,29 @@ class RLBuilder(RouteLitBuilder):
         size: Optional[Literal["xs", "sm", "md", "lg", "xl"]] = None,
         **kwargs: Any,
     ) -> bool:
+        """
+        Boolean input rendered as a single checkbox.
+
+        Args:
+            label (str): Checkbox label.
+            auto_contrast (Optional[bool]): Improve contrast automatically.
+            checked (bool): Initial checked state.
+            color (Optional[str]): Accent color.
+            description (Optional[str]): Helper text under the label.
+            disabled (Optional[bool]): Disable input interaction.
+            error (Optional[str]): Error message.
+            icon_color (Optional[str]): Color of the check icon.
+            key (Optional[str]): Explicit element key.
+            label_position (Optional[Literal["left", "right"]]): Label position.
+            name (Optional[str]): Input name.
+            on_change (Optional[Callable[[bool], None]]): Change handler.
+            radius (Optional[Union[Literal["xs", "sm", "md", "lg", "xl"], int]]): Corner radius.
+            size (Optional[Literal["xs", "sm", "md", "lg", "xl"]]): Control size.
+            kwargs: Additional props to set.
+
+        Returns:
+            bool: Current value.
+        """
         return self._x_checkbox(
             "checkbox",
             key or self._new_widget_id("checkbox", label),
@@ -329,6 +520,29 @@ class RLBuilder(RouteLitBuilder):
         with_asterisk: Optional[bool] = None,
         **kwargs: Any,
     ) -> list[str]:
+        """
+        Multiple selection using a group of checkboxes.
+
+        Args:
+            label (str): Group label.
+            options (list[Union[RLOption, str]]): Available options.
+            description (Optional[str]): Helper text under the label.
+            error (Optional[str]): Error message.
+            format_func (Optional[Callable[[Any], str]]): Map option value to label.
+            group_props (Optional[dict[str, Any]]): Extra props for the group container.
+            key (Optional[str]): Explicit element key.
+            on_change (Optional[Callable[[list[str]], None]]): Change handler.
+            radius (Optional[Union[str, int]]): Corner radius.
+            read_only (Optional[bool]): Read-only state.
+            required (Optional[bool]): Mark as required.
+            size (Optional[str]): Control size.
+            value (Optional[list[str]]): Selected values.
+            with_asterisk (Optional[bool]): Show required asterisk.
+            kwargs: Additional props to set.
+
+        Returns:
+            list[str]: Selected values.
+        """
         return self._x_checkbox_group(
             "checkboxgroup",
             key or self._new_widget_id("checkbox-group", label),
@@ -360,6 +574,22 @@ class RLBuilder(RouteLitBuilder):
         value: Optional[Union[str, list[str]]] = None,
         **kwargs: Any,
     ) -> Union[str, list[str]]:
+        """
+        Single or multiple selection using chip components.
+
+        Args:
+            key (str): Explicit element key.
+            options (list[Union[RLOption, str]]): Available options.
+            format_func (Optional[Callable[[Any], str]]): Map option value to label.
+            group_props (Optional[dict[str, Any]]): Extra props for the group container.
+            multiple (bool): Enable multiple selection.
+            on_change (Optional[Callable[[Union[str, list[str]]], None]]): Change handler.
+            value (Optional[Union[str, list[str]]]): Selected value(s).
+            kwargs: Additional props to set.
+
+        Returns:
+            Union[str, list[str]]: Selected value(s).
+        """
         if multiple:
             return self._x_checkbox_group(
                 "chipgroup",
@@ -400,6 +630,26 @@ class RLBuilder(RouteLitBuilder):
         size: Optional[Literal["xs", "sm", "md", "lg", "xl"]] = None,
         **kwargs: Any,
     ) -> bool:
+        """
+        Toggleable chip, can behave as checkbox or radio.
+
+        Args:
+            label (str): Chip label.
+            auto_contrast (Optional[bool]): Improve contrast automatically.
+            checked (bool): Initial checked state.
+            color (Optional[str]): Accent color.
+            disabled (Optional[bool]): Disable interaction.
+            icon (Optional[RouteLitElement]): Left section icon.
+            input_type (Optional[Literal["checkbox", "radio"]]): Behavior of the chip.
+            key (Optional[str]): Explicit element key.
+            on_change (Optional[Callable[[bool], None]]): Change handler.
+            radius (Optional[Union[Literal["xs", "sm", "md", "lg", "xl"], int]]): Corner radius.
+            size (Optional[Literal["xs", "sm", "md", "lg", "xl"]]): Control size.
+            kwargs: Additional props to set.
+
+        Returns:
+            bool: Current value.
+        """
         return self._x_checkbox(
             "chip",
             key or self._new_widget_id("chip", label),
@@ -437,6 +687,31 @@ class RLBuilder(RouteLitBuilder):
         with_preview: Optional[bool] = None,
         **kwargs: Any,
     ) -> str:
+        """
+        Text input specialized for color values with a color picker.
+
+        Args:
+            label (str): Field label.
+            description (Optional[str]): Helper text under the label.
+            disabled (Optional[bool]): Disable input interaction.
+            error (Optional[str]): Error message.
+            fix_on_blur (Optional[bool]): Normalize value on blur.
+            input_size (Optional[str]): Control size.
+            key (Optional[str]): Explicit element key.
+            on_change (Optional[Callable[[str], None]]): Change handler.
+            radius (Optional[str]): Corner radius.
+            required (Optional[bool]): Mark as required.
+            size (Optional[str]): Control size.
+            swatches (Optional[list[str]]): Preset color swatches.
+            value (Optional[str]): Current value.
+            with_asterisk (Optional[bool]): Show required asterisk.
+            with_picker (Optional[bool]): Show color picker.
+            with_preview (Optional[bool]): Show color preview chip.
+            kwargs: Additional props to set.
+
+        Returns:
+            str: Current value.
+        """
         return self._x_input(  # type: ignore[return-value]
             "colorinput",
             key or self._new_widget_id("colorinput", label),
@@ -467,6 +742,19 @@ class RLBuilder(RouteLitBuilder):
         radius: Optional[str] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Group a set of related form fields under a legend.
+
+        Args:
+            legend (str): Legend text.
+            disabled (Optional[bool]): Disable all nested inputs.
+            key (Optional[str]): Explicit element key.
+            radius (Optional[str]): Corner radius.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the fieldset element.
+        """
         element = self._create_element(
             key=key or self._new_widget_id("fieldset", legend),
             name="fieldset",
@@ -500,6 +788,31 @@ class RLBuilder(RouteLitBuilder):
         with_asterisk: Optional[bool] = None,
         **kwargs: Any,
     ) -> str:
+        """
+        Single-line text input.
+
+        Args:
+            label (str): Field label.
+            description (Optional[str]): Helper text under the label.
+            disabled (Optional[bool]): Disable input interaction.
+            error (Optional[str]): Error message.
+            key (Optional[str]): Explicit element key.
+            left_section (Optional[RouteLitElement]): Left adornment.
+            left_section_props (Optional[dict[str, Any]]): Left adornment props.
+            left_section_width (Optional[str]): Left adornment width.
+            on_change (Optional[Callable[[str], None]]): Change handler.
+            required (Optional[bool]): Mark as required.
+            right_section (Optional[RouteLitElement]): Right adornment.
+            right_section_props (Optional[dict[str, Any]]): Right adornment props.
+            right_section_width (Optional[str]): Right adornment width.
+            size (Optional[str]): Control size.
+            value (Optional[str]): Current value.
+            with_asterisk (Optional[bool]): Show required asterisk.
+            kwargs: Additional props to set.
+
+        Returns:
+            str: Current value.
+        """
         return cast(
             str,
             self._x_input(
@@ -548,6 +861,34 @@ class RLBuilder(RouteLitBuilder):
         with_asterisk: Optional[bool] = None,
         **kwargs: Any,
     ) -> str:
+        """
+        Native HTML select input.
+
+        Args:
+            label (str): Field label.
+            options (list[Union[RLOption, str]]): Available options.
+            description (Optional[str]): Helper text under the label.
+            disabled (Optional[bool]): Disable input interaction.
+            error (Optional[str]): Error message.
+            format_func (Optional[Callable[[Any], str]]): Map option value to label.
+            key (Optional[str]): Explicit element key.
+            left_section (Optional[RouteLitElement]): Left adornment.
+            left_section_props (Optional[dict[str, Any]]): Left adornment props.
+            left_section_width (Optional[str]): Left adornment width.
+            on_change (Optional[Callable[[str], None]]): Change handler.
+            radius (Optional[str]): Corner radius.
+            required (Optional[bool]): Mark as required.
+            right_section (Optional[RouteLitElement]): Right adornment.
+            right_section_props (Optional[dict[str, Any]]): Right adornment props.
+            right_section_width (Optional[str]): Right adornment width.
+            size (Optional[str]): Control size.
+            value (Optional[str]): Current value.
+            with_asterisk (Optional[bool]): Show required asterisk.
+            kwargs: Additional props to set.
+
+        Returns:
+            str: Current value.
+        """
         return cast(
             str,
             self._x_radio_select(
@@ -608,6 +949,42 @@ class RLBuilder(RouteLitBuilder):
         with_asterisk: Optional[bool] = None,
         **kwargs: Any,
     ) -> Union[float, int]:
+        """
+        Numeric input with formatting and controls.
+
+        Args:
+            label (str): Field label.
+            allow_decimal (Optional[bool]): Allow decimal values.
+            allow_leading_zeros (Optional[bool]): Permit leading zeros.
+            allow_negative (Optional[bool]): Permit negative values.
+            allowed_decimal_separators (Optional[list[str]]): Additional decimal separators.
+            decimal_scale (Optional[int]): Maximum number of decimal places.
+            decimal_separator (Optional[str]): Decimal separator to use.
+            description (Optional[str]): Helper text under the label.
+            disabled (Optional[bool]): Disable input interaction.
+            error (Optional[str]): Error message.
+            hide_controls (Optional[bool]): Hide increment/decrement controls.
+            key (Optional[str]): Explicit element key.
+            left_section (Optional[RouteLitElement]): Left adornment.
+            left_section_props (Optional[dict[str, Any]]): Left adornment props.
+            left_section_width (Optional[str]): Left adornment width.
+            max_value (Optional[Union[float, int]]): Maximum value.
+            min_value (Optional[Union[float, int]]): Minimum value.
+            on_change (Optional[Callable[[Union[float, int]], None]]): Change handler.
+            parser (Callable[[str], Union[float, int]]): Parser for the returned value.
+            required (Optional[bool]): Mark as required.
+            right_section (Optional[RouteLitElement]): Right adornment.
+            right_section_props (Optional[dict[str, Any]]): Right adornment props.
+            right_section_width (Optional[str]): Right adornment width.
+            size (Optional[str]): Control size.
+            step (Optional[Union[float, int]]): Step of increment/decrement.
+            value (Optional[Union[float, int]]): Current value.
+            with_asterisk (Optional[bool]): Show required asterisk.
+            kwargs: Additional props to set.
+
+        Returns:
+            Union[float, int]: Current value parsed by the provided parser.
+        """
         return parser(
             cast(
                 str,
@@ -662,6 +1039,28 @@ class RLBuilder(RouteLitBuilder):
         with_asterisk: Optional[bool] = None,
         **kwargs: Any,
     ) -> Optional[str]:
+        """
+        Password input with visibility toggle.
+
+        Args:
+            label (str): Field label.
+            description (Optional[str]): Helper text under the label.
+            disabled (Optional[bool]): Disable input interaction.
+            error (Optional[str]): Error message.
+            input_size (Optional[str]): Control size.
+            key (Optional[str]): Explicit element key.
+            on_change (Optional[Callable[[str], None]]): Change handler.
+            radius (Optional[str]): Corner radius.
+            required (Optional[bool]): Mark as required.
+            size (Optional[str]): Control size.
+            value (Optional[str]): Current value.
+            visible (Optional[bool]): Force visibility of the password.
+            with_asterisk (Optional[bool]): Show required asterisk.
+            kwargs: Additional props to set.
+
+        Returns:
+            Optional[str]: Current value.
+        """
         return self._x_input(
             "passwordinput",
             key or self._new_widget_id("passwordinput", label),
@@ -700,6 +1099,30 @@ class RLBuilder(RouteLitBuilder):
         with_asterisk: Optional[bool] = None,
         **kwargs: Any,
     ) -> Optional[str]:
+        """
+        Single selection using radio inputs.
+
+        Args:
+            label (str): Group label.
+            options (list[Union[RLOption, str]]): Available options.
+            description (Optional[str]): Helper text under the label.
+            disabled (Optional[bool]): Disable interaction.
+            error (Optional[str]): Error message.
+            format_func (Optional[Callable[[Any], str]]): Map option value to label.
+            group_props (Optional[dict[str, Any]]): Extra props for the group container.
+            input_size (Optional[str]): Control size.
+            key (Optional[str]): Explicit element key.
+            on_change (Optional[Callable[[str], None]]): Change handler.
+            read_only (Optional[bool]): Read-only state.
+            required (Optional[bool]): Mark as required.
+            size (Optional[str]): Control size.
+            value (Optional[str]): Selected value.
+            with_asterisk (Optional[bool]): Show required asterisk.
+            kwargs: Additional props to set.
+
+        Returns:
+            Optional[str]: Selected value.
+        """
         return cast(
             Optional[str],
             self._x_radio_select(
@@ -742,6 +1165,29 @@ class RLBuilder(RouteLitBuilder):
         value: Optional[tuple[float, float]] = None,
         **kwargs: Any,
     ) -> tuple[float, float]:
+        """
+        Slider that allows selecting a numeric range.
+
+        Args:
+            label (str): Field label.
+            color (Optional[str]): Accent color.
+            disabled (Optional[bool]): Disable interaction.
+            inverted (Optional[bool]): Invert direction.
+            key (Optional[str]): Explicit element key.
+            label_always_on (Optional[bool]): Always show labels above thumbs.
+            marks (Optional[list[RLOption]]): Marks along the slider.
+            max_range (Optional[float]): Max distance between thumbs.
+            max_value (Optional[float]): Maximum value.
+            min_value (Optional[float]): Minimum value.
+            on_change (Optional[Callable[[tuple[float, float]], None]]): Change handler.
+            precision (Optional[int]): Decimal precision.
+            step (Optional[float]): Step size.
+            value (Optional[tuple[float, float]]): Current value.
+            kwargs: Additional props to set.
+
+        Returns:
+            tuple[float, float]: Current range values.
+        """
         return cast(
             tuple[float, float],
             self._x_input(
@@ -778,6 +1224,24 @@ class RLBuilder(RouteLitBuilder):
         value: Optional[int] = None,
         **kwargs: Any,
     ) -> float:
+        """
+        Star (or icon) rating input.
+
+        Args:
+            key (str): Explicit element key.
+            color (Optional[str]): Accent color.
+            count (Optional[int]): Number of icons.
+            fractions (Optional[int]): Fractional steps per icon.
+            on_change (Optional[Callable[[int], None]]): Change handler.
+            read_only (Optional[bool]): Read-only state.
+            size (Optional[str]): Control size.
+            parser (Callable[[Any], Union[float, int]]): Parser for the returned value.
+            value (Optional[int]): Current value.
+            kwargs: Additional props to set.
+
+        Returns:
+            float: Current value parsed by the provided parser.
+        """
         return parser(
             self._x_input(
                 "rating",
@@ -813,6 +1277,30 @@ class RLBuilder(RouteLitBuilder):
         with_items_borders: Optional[bool] = None,
         **kwargs: Any,
     ) -> str:
+        """
+        Segmented control for single selection among options.
+
+        Args:
+            key (str): Explicit element key.
+            options (list[Union[RLOption, str]]): Available options.
+            auto_contrast (Optional[bool]): Improve contrast automatically.
+            color (Optional[str]): Accent color.
+            disabled (Optional[bool]): Disable interaction.
+            format_func (Optional[Callable[[Any], str]]): Map option value to label.
+            full_width (Optional[bool]): Make control take full width.
+            on_change (Optional[Callable[[str], None]]): Change handler.
+            orientation (Optional[Literal["horizontal", "vertical"]]): Orientation.
+            radius (Optional[str]): Corner radius.
+            read_only (Optional[bool]): Read-only state.
+            size (Optional[str]): Control size.
+            transition_duration (Optional[int]): Selection animation duration.
+            value (Optional[str]): Selected value.
+            with_items_borders (Optional[bool]): Show borders between items.
+            kwargs: Additional props to set.
+
+        Returns:
+            str: Selected value.
+        """
         value = self._x_radio_select(
             "segmentedcontrol",
             key,
@@ -860,6 +1348,33 @@ class RLBuilder(RouteLitBuilder):
         value: Optional[float] = None,
         **kwargs: Any,
     ) -> Union[float, int]:
+        """
+        Single-value slider input.
+
+        Args:
+            label (str): Field label.
+            disabled (Optional[bool]): Disable interaction.
+            inverted (Optional[bool]): Invert direction.
+            key (Optional[str]): Explicit element key.
+            label_always_on (Optional[bool]): Always show label above thumb.
+            marks (Optional[list[RLOption]]): Marks along the slider.
+            max_value (Optional[float]): Maximum value.
+            min_value (Optional[float]): Minimum value.
+            on_change (Optional[Callable[[float], None]]): Change handler.
+            precision (Optional[int]): Decimal precision.
+            restrict_to_marks (Optional[bool]): Only allow values at marks.
+            show_label_on_hover (Optional[bool]): Show label when hovering.
+            size (Optional[str]): Control size.
+            step (Optional[float]): Step size.
+            parser (Callable[[Any], Union[float, int]]): Parser for the returned value.
+            thumb_label (Optional[str]): Label template for thumb.
+            thumb_size (Optional[str]): Thumb size.
+            value (Optional[float]): Current value.
+            kwargs: Additional props to set.
+
+        Returns:
+            Union[float, int]: Current value parsed by the provided parser.
+        """
         return parser(
             self._x_input(
                 "slider",
@@ -902,6 +1417,28 @@ class RLBuilder(RouteLitBuilder):
         with_thumb_indicator: Optional[bool] = None,
         **kwargs: Any,
     ) -> bool:
+        """
+        Boolean input rendered as a switch.
+
+        Args:
+            label (str): Field label.
+            checked (bool): Initial checked state.
+            color (Optional[str]): Accent color.
+            description (Optional[str]): Helper text under the label.
+            disabled (Optional[bool]): Disable interaction.
+            error (Optional[str]): Error message.
+            key (Optional[str]): Explicit element key.
+            label_position (Optional[Literal["left", "right"]]): Label position.
+            on_change (Optional[Callable[[bool], None]]): Change handler.
+            radius (Optional[str]): Corner radius.
+            size (Optional[str]): Control size.
+            thumb_icon (Optional[RouteLitElement]): Icon inside the thumb.
+            with_thumb_indicator (Optional[bool]): Show indicator inside the thumb.
+            kwargs: Additional props to set.
+
+        Returns:
+            bool: Current value.
+        """
         return self._x_checkbox(
             "switch",
             key or self._new_widget_id("switch", label),
@@ -938,6 +1475,28 @@ class RLBuilder(RouteLitBuilder):
         with_asterisk: Optional[bool] = None,
         **kwargs: Any,
     ) -> list[str]:
+        """
+        Multiple selection using a group of switches.
+
+        Args:
+            label (str): Group label.
+            options (list[Union[RLOption, str]]): Available options.
+            description (Optional[str]): Helper text under the label.
+            error (Optional[str]): Error message.
+            format_func (Optional[Callable[[Any], str]]): Map option value to label.
+            group_props (Optional[dict[str, Any]]): Extra props for the group container.
+            key (Optional[str]): Explicit element key.
+            on_change (Optional[Callable[[list[str]], None]]): Change handler.
+            read_only (Optional[bool]): Read-only state.
+            required (Optional[bool]): Mark as required.
+            size (Optional[str]): Control size.
+            value (Optional[list[str]]): Selected values.
+            with_asterisk (Optional[bool]): Show required asterisk.
+            kwargs: Additional props to set.
+
+        Returns:
+            list[str]: Selected values.
+        """
         return self._x_checkbox_group(
             "switchgroup",
             key or self._new_widget_id("switch-group", label),
@@ -975,6 +1534,29 @@ class RLBuilder(RouteLitBuilder):
         value: Optional[str] = None,
         **kwargs: Any,
     ) -> Optional[str]:
+        """
+        Multi-line text input.
+
+        Args:
+            label (str): Field label.
+            autosize (Optional[bool]): Grow/shrink to fit content.
+            description (Optional[str]): Helper text under the label.
+            disabled (Optional[bool]): Disable interaction.
+            error (Optional[str]): Error message.
+            input_size (Optional[str]): Control size.
+            key (Optional[str]): Explicit element key.
+            max_rows (Optional[int]): Maximum number of rows when autosizing.
+            min_rows (Optional[int]): Minimum number of rows when autosizing.
+            on_change (Optional[Callable[[str], None]]): Change handler.
+            radius (Optional[Union[str, int]]): Corner radius.
+            required (Optional[bool]): Mark as required.
+            resize (Optional[str]): CSS resize behavior.
+            value (Optional[str]): Current value.
+            kwargs: Additional props to set.
+
+        Returns:
+            Optional[str]: Current value.
+        """
         return self._x_input(
             "textarea",
             key or self._new_widget_id("textarea", label),
@@ -1024,6 +1606,40 @@ class RLBuilder(RouteLitBuilder):
         with_asterisk: Optional[bool] = None,
         **kwargs: Any,
     ) -> Optional[str]:
+        """
+        Autocomplete text input with suggestions dropdown.
+
+        Args:
+            label (str): Field label.
+            data (list[Union[str, GroupOption]]): Options and groups.
+            auto_select_on_blur (Optional[bool]): Auto select highlighted option on blur.
+            clear_button_props (Optional[dict[str, Any]]): Props for clear button.
+            clearable (Optional[bool]): Enable clear button.
+            combobox_props (Optional[dict[str, Any]]): Props for combobox.
+            default_drowndown_open (Optional[bool]): Open dropdown by default.
+            description (Optional[str]): Helper text under the label.
+            disabled (Optional[bool]): Disable interaction.
+            dropdown_opened (Optional[bool]): Control dropdown visibility.
+            error (Optional[str]): Error message.
+            key (Optional[str]): Explicit element key.
+            left_section (Optional[RouteLitElement]): Left adornment.
+            left_section_props (Optional[dict[str, Any]]): Left adornment props.
+            left_section_width (Optional[str]): Left adornment width.
+            limit (Optional[int]): Max number of options shown.
+            on_change (Optional[Callable[[str], None]]): Change handler.
+            radius (Optional[Union[str, int]]): Corner radius.
+            required (Optional[bool]): Mark as required.
+            right_section (Optional[RouteLitElement]): Right adornment.
+            right_section_props (Optional[dict[str, Any]]): Right adornment props.
+            right_section_width (Optional[str]): Right adornment width.
+            size (Optional[str]): Control size.
+            value (Optional[str]): Current value.
+            with_asterisk (Optional[bool]): Show required asterisk.
+            kwargs: Additional props to set.
+
+        Returns:
+            Optional[str]: Current value.
+        """
         return self._x_input(
             "autocomplete",
             key or self._new_widget_id("autocomplete", label),
@@ -1104,6 +1720,60 @@ class RLBuilder(RouteLitBuilder):
         with_scroll_area: Optional[bool] = None,
         **kwargs: Any,
     ) -> list[str]:
+        """
+        Multi-select input with search and tags.
+
+        Args:
+            label (str): Field label.
+            data (list[Union[RLOption, str]]): Available options.
+            check_icon_position (Optional[Literal["left", "right"]]): Check icon position.
+            chevron_color (Optional[str]): Chevron color.
+            clear_button_props (Optional[dict[str, Any]]): Clear button props.
+            clearable (Optional[bool]): Enable clear button.
+            combobox_props (Optional[dict[str, Any]]): Combobox props.
+            default_dropdown_opened (Optional[bool]): Open dropdown by default.
+            default_search_value (Optional[str]): Initial search value.
+            description (Optional[str]): Helper text under the label.
+            disabled (Optional[bool]): Disable interaction.
+            dropdown_opened (Optional[bool]): Control dropdown visibility.
+            error (Optional[str]): Error message.
+            error_props (Optional[dict[str, Any]]): Error message props.
+            format_func (Optional[Callable[[Any], str]]): Map option value to label.
+            hidden_input_props (Optional[dict[str, Any]]): Hidden input props.
+            hidden_input_values_divider (Optional[str]): Divider for hidden input.
+            hide_picked_options (Optional[bool]): Hide already selected options.
+            input_size (Optional[str]): Control size.
+            input_wrapper_order (Optional[list[str]]): Order of input wrapper parts.
+            key (Optional[str]): Explicit element key.
+            label_props (Optional[dict[str, Any]]): Label props.
+            left_section (Optional[RouteLitElement]): Left adornment.
+            left_section_props (Optional[dict[str, Any]]): Left adornment props.
+            left_section_width (Optional[str]): Left adornment width.
+            limit (Optional[int]): Max number of options shown.
+            max_dropdown_height (Optional[Union[str, int]]): Max dropdown height.
+            max_values (Optional[int]): Max number of selected values.
+            nothing_found_message (Optional[str]): Message when search returns no results.
+            on_change (Optional[Callable[[list[str]], None]]): Change handler.
+            radius (Optional[Union[str, int]]): Corner radius.
+            required (Optional[bool]): Mark as required.
+            right_section (Optional[RouteLitElement]): Right adornment.
+            right_section_props (Optional[dict[str, Any]]): Right adornment props.
+            right_section_width (Optional[str]): Right adornment width.
+            scroll_area_props (Optional[dict[str, Any]]): Scroll area props.
+            search_value (Optional[str]): Current search value.
+            searchable (Optional[bool]): Enable search.
+            select_first_option_on_change (Optional[bool]): Auto select first option when changed.
+            size (Optional[str]): Control size.
+            value (Optional[list[str]]): Current value.
+            with_asterisk (Optional[bool]): Show required asterisk.
+            with_check_icon (Optional[bool]): Show check icon next to selected options.
+            with_error_styles (Optional[bool]): Apply error styles.
+            with_scroll_area (Optional[bool]): Wrap dropdown with scroll area.
+            kwargs: Additional props to set.
+
+        Returns:
+            list[str]: Selected values.
+        """
         return self._x_checkbox_group(
             "multiselect",
             key or self._new_widget_id("multiselect", label),
@@ -1197,6 +1867,52 @@ class RLBuilder(RouteLitBuilder):
         with_scroll_area: Optional[bool] = None,
         **kwargs: Any,
     ) -> Any:
+        """
+        Single-select input with search and advanced features.
+
+        Args:
+            label (str): Field label.
+            options (list[Union[RLOption, str]]): Available options.
+            allow_deselect (Optional[bool]): Allow clearing the selection.
+            auto_select_on_blur (Optional[bool]): Auto select highlighted option on blur.
+            check_icon_position (Optional[Literal["left", "right"]]): Check icon position.
+            chevron_color (Optional[str]): Chevron color.
+            clearable (Optional[bool]): Enable clear button.
+            combobox_props (Optional[dict[str, Any]]): Combobox props.
+            default_dropdown_opened (Optional[bool]): Open dropdown by default.
+            default_search_value (Optional[str]): Initial search value.
+            description (Optional[str]): Helper text under the label.
+            error (Optional[str]): Error message.
+            format_func (Optional[Callable[[Any], str]]): Map option value to label.
+            hidden_input_props (Optional[dict[str, Any]]): Hidden input props.
+            input_size (Optional[str]): Control size.
+            input_wrapper_order (Optional[list[str]]): Order of input wrapper parts.
+            key (Optional[str]): Explicit element key.
+            label_props (Optional[dict[str, Any]]): Label props.
+            left_section (Optional[RouteLitElement]): Left adornment.
+            left_section_props (Optional[dict[str, Any]]): Left adornment props.
+            left_section_width (Optional[str]): Left adornment width.
+            limit (Optional[int]): Max number of options shown.
+            max_dropdown_height (Optional[Union[str, int]]): Max dropdown height.
+            nothing_found_message (Optional[str]): Message when search returns no results.
+            on_change (Optional[Callable[[Any], None]]): Change handler.
+            pointer (Optional[bool]): Use pointer cursor.
+            radius (Optional[Union[str, int]]): Corner radius.
+            required (Optional[bool]): Mark as required.
+            scroll_area_props (Optional[dict[str, Any]]): Scroll area props.
+            right_section (Optional[RouteLitElement]): Right adornment.
+            right_section_props (Optional[dict[str, Any]]): Right adornment props.
+            right_section_width (Optional[str]): Right adornment width.
+            size (Optional[str]): Control size.
+            value (Optional[Any]): Current value.
+            with_asterisk (Optional[bool]): Show required asterisk.
+            with_error_styles (Optional[bool]): Apply error styles.
+            with_scroll_area (Optional[bool]): Wrap dropdown with scroll area.
+            kwargs: Additional props to set.
+
+        Returns:
+            Any: Selected value.
+        """
         return self._x_radio_select(
             "select",
             key or self._new_widget_id("select", label),
@@ -1288,6 +2004,61 @@ class RLBuilder(RouteLitBuilder):
         with_scroll_area: Optional[bool] = None,
         **kwargs: Any,
     ) -> list[str]:
+        """
+        Free-form tags input with autocomplete suggestions.
+
+        Allows typing new tags and selecting from provided options. Supports grouping
+        of options and various UI customizations.
+
+        Args:
+            label (str): Field label.
+            data (list[Union[RLOption, GroupOption, str]]): Available options and/or groups.
+            accept_value_on_blur (Optional[bool]): Add current value on blur.
+            allow_duplicates (Optional[bool]): Allow duplicate tags.
+            clear_button_props (Optional[dict[str, Any]]): Props for the clear button.
+            clearable (Optional[bool]): Show clear button to remove all values.
+            combobox_props (Optional[dict[str, Any]]): Props passed to the underlying combobox.
+            default_dropdown_opened (Optional[bool]): Initial dropdown state.
+            default_search_value (Optional[str]): Initial search query.
+            description (Optional[str]): Helper text under the label.
+            description_props (Optional[dict[str, Any]]): Props for the description element.
+            disabled (Optional[bool]): Disable input interaction.
+            dropdown_opened (Optional[bool]): Controlled dropdown open state.
+            error (Optional[str]): Error message.
+            error_props (Optional[dict[str, Any]]): Props for the error element.
+            hidden_input_props (Optional[dict[str, Any]]): Props for the hidden form input.
+            hidden_input_values_divider (Optional[str]): Divider for hidden input serialization.
+            input_size (Optional[str]): Input size variant.
+            input_wrapper_order (Optional[list[str]]): Order of input wrapper parts.
+            key (Optional[str]): Explicit element key.
+            label_props (Optional[dict[str, Any]]): Props for the label element.
+            left_section (Optional[RouteLitElement]): Left section content.
+            left_section_props (Optional[dict[str, Any]]): Props for the left section wrapper.
+            left_section_width (Optional[str]): Width of the left section.
+            limit (Optional[int]): Max number of items displayed in dropdown.
+            max_dropdown_height (Optional[Union[str, int]]): Max height of the dropdown.
+            max_tags (Optional[int]): Max number of tags that can be added.
+            on_change (Optional[Callable[[list[str]], None]]): Change handler.
+            pointer (Optional[bool]): Show pointer cursor on hover.
+            radius (Optional[Union[str, int]]): Corner radius.
+            required (Optional[bool]): Mark field as required.
+            right_section (Optional[str]): Right section content.
+            right_section_props (Optional[dict[str, Any]]): Props for the right section wrapper.
+            right_section_width (Optional[str]): Width of the right section.
+            scroll_area_props (Optional[dict[str, Any]]): Props for dropdown scroll area.
+            search_value (Optional[str]): Controlled search query value.
+            select_first_option_on_change (Optional[bool]): Auto-select first option on change.
+            size (Optional[str]): Control size.
+            split_chars (Optional[list[str]]): Characters that split input into tags.
+            value (Optional[list[str]]): Current value (list of tags).
+            with_asterisk (Optional[bool]): Show required asterisk.
+            with_error_styles (Optional[bool]): Apply error styles when error is set.
+            with_scroll_area (Optional[bool]): Wrap dropdown list in a scroll area.
+            kwargs: Additional props to set.
+
+        Returns:
+            list[str]: Current list of tags.
+        """
         return cast(
             list[str],
             self._x_checkbox_group(
@@ -1349,6 +2120,19 @@ class RLBuilder(RouteLitBuilder):
         rl_virtual: Optional[bool] = None,
         **kwargs: Any,
     ) -> bool:
+        """
+        Icon-only button for compact actions.
+
+        Args:
+            name (str): Icon name.
+            key (Optional[str]): Explicit element key.
+            on_click (Optional[Callable[[], None]]): Click handler.
+            rl_virtual (Optional[bool]): Whether the element is virtual.
+            kwargs: Additional props to set.
+
+        Returns:
+            bool: Click result flag.
+        """
         return self._x_button(
             "actionicon",
             key or self._new_widget_id("actionicon", name),
@@ -1364,6 +2148,17 @@ class RLBuilder(RouteLitBuilder):
         orientation: Optional[Literal["horizontal", "vertical"]] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Group multiple `action_icon` elements together.
+
+        Args:
+            border_width (Optional[str]): Border width between icons.
+            orientation (Optional[Literal["horizontal", "vertical"]]): Layout direction.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the group element.
+        """
         element = self._create_element(
             key=self._new_text_id("actionicongroup"),
             name="actionicongroup",
@@ -1382,6 +2177,17 @@ class RLBuilder(RouteLitBuilder):
         rl_virtual: bool = True,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Section within an `action_icon_group`, usually for labels or extra content.
+
+        Args:
+            text (Optional[str]): Section text.
+            rl_virtual (bool): Whether the element is virtual.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the section element.
+        """
         element = self._create_element(
             key=self._new_text_id("actionicongroupsection"),
             name="actionicongroupsection",
@@ -1417,6 +2223,34 @@ class RLBuilder(RouteLitBuilder):
         variant: Optional[str] = None,
         **kwargs: Any,
     ) -> bool:
+        """
+        Standard button component.
+
+        Args:
+            text (str): Button text.
+            color (Optional[str]): Accent color or variant color.
+            disabled (Optional[bool]): Disable interaction.
+            full_width (Optional[bool]): Make button take full width.
+            gradient (Optional[dict[str, Any]]): Gradient configuration for variant.
+            justify (Optional[str]): Content justification.
+            left_section (Optional[RouteLitElement]): Left adornment.
+            left_section_props (Optional[dict[str, Any]]): Left adornment props.
+            left_section_width (Optional[str]): Left adornment width.
+            loading (Optional[bool]): Show loading state.
+            key (Optional[str]): Explicit element key.
+            on_click (Optional[Callable[[], None]]): Click handler.
+            radius (Optional[Union[str, int]]): Corner radius.
+            right_section (Optional[RouteLitElement]): Right adornment.
+            right_section_props (Optional[dict[str, Any]]): Right adornment props.
+            right_section_width (Optional[str]): Right adornment width.
+            rl_virtual (Optional[bool]): Whether the element is virtual.
+            size (Optional[str]): Control size.
+            variant (Optional[str]): Visual variant.
+            kwargs: Additional props to set.
+
+        Returns:
+            bool: Click result flag.
+        """
         return self._x_button(
             "button",
             text,
@@ -1443,6 +2277,16 @@ class RLBuilder(RouteLitBuilder):
 
     @staticmethod
     def icon(name: str, **kwargs: Any) -> RouteLitElement:
+        """
+        Create an icon element to be used as an adornment.
+
+        Args:
+            name (str): Icon name.
+            kwargs: Additional props to set.
+
+        Returns:
+            RouteLitElement: Virtual icon element.
+        """
         return RouteLitElement(
             name="icon",
             key="",
@@ -1471,6 +2315,28 @@ class RLBuilder(RouteLitBuilder):
         variant: Optional[str] = None,
         **kwargs: Any,
     ) -> RouteLitElement:
+        """
+        Anchor link element that routes internally or opens external URLs.
+
+        Args:
+            href (str): Destination path or URL.
+            text (str): Link text.
+            c (Optional[str]): Text color.
+            gradient (Optional[dict[str, Any]]): Gradient style.
+            inherit (Optional[bool]): Inherit parent font styles.
+            inline (Optional[bool]): Render inline.
+            is_external (bool): Open in a new tab/window if true.
+            line_clamp (Optional[int]): Clamp to a number of lines.
+            replace (bool): Replace history entry when routing.
+            size (Optional[str]): Text size.
+            truncate (Optional[str]): Truncate overflow.
+            underline (Optional[str]): Underline style.
+            variant (Optional[str]): Visual variant.
+            kwargs: Additional props to set.
+
+        Returns:
+            RouteLitElement: Configured anchor element.
+        """
         return self.link(
             href,
             text,
@@ -1509,6 +2375,30 @@ class RLBuilder(RouteLitBuilder):
         right_section: Optional[RouteLitElement] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Navigation link, typically used in sidebars or menus.
+
+        Args:
+            href (str): Destination path.
+            label (str): Visible label.
+            active (Optional[bool]): Force active state.
+            auto_contrast (Optional[bool]): Improve contrast automatically.
+            children_offset (Optional[str]): Indentation for children links.
+            color (Optional[str]): Accent color.
+            default_opened (Optional[bool]): Start expanded.
+            description (Optional[str]): Helper text under the label.
+            disable_right_section_rotation (Optional[bool]): Disable chevron rotation.
+            disabled (Optional[bool]): Disable interaction.
+            exact (Optional[bool]): Match route exactly.
+            is_external (bool): Treat as external link.
+            left_section (Optional[RouteLitElement]): Left adornment.
+            no_wrap (Optional[bool]): Prevent label wrapping.
+            right_section (Optional[RouteLitElement]): Right adornment.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder for child links/content.
+        """
         element = self.link(
             href,
             label,
@@ -1552,6 +2442,47 @@ class RLBuilder(RouteLitBuilder):
         variant: Optional[Literal["default", "outline", "pills"]] = None,
         **kwargs: Any,
     ) -> tuple["RLBuilder", ...]:
+        """
+        Tabs component with a tablist and corresponding tab panels.
+
+        Args:
+            tabs (list[Union[MTTab, str]]): Tabs configuration or values.
+            activate_tab_with_keyboard (Optional[bool]): Enable keyboard navigation.
+            allow_tab_deactivation (Optional[bool]): Allow deactivating active tab.
+            auto_contrast (Optional[bool]): Improve contrast automatically.
+            color (Optional[str]): Accent color.
+            default_value (Optional[str]): Initially selected tab value.
+            inverted (Optional[bool]): Invert styles.
+            keep_mounted (Optional[bool]): Keep inactive panels mounted.
+            key (Optional[str]): Explicit element key.
+            loop (Optional[bool]): Loop focus within tabs.
+            orientation (Optional[Literal["horizontal", "vertical"]]): Orientation.
+            placement (Optional[Literal["left", "right"]]): Placement of tabs relative to panels.
+            radius (Optional[Union[str, int]]): Corner radius.
+            tablist_grow (Optional[bool]): Make tablist items grow.
+            tablist_justify (Optional[str]): Tablist justification.
+            variant (Optional[Literal["default", "outline", "pills"]]): Visual variant.
+            kwargs: Additional props to set.
+
+        Returns:
+            tuple[RLBuilder, ...]: Panel builders, one per tab value.
+
+        Example:
+        ```python
+        tab1, tab2 = ui.tabs(
+            tabs=[
+                ui.tab(value="tab1", label="Tab 1"),
+                "Tab 2",
+            ],
+            default_value="tab1",
+            variant="outline",
+        )
+        with tab1:
+            ui.text("Tab body 1")
+        with tab2:
+            ui.text("Tab body 2")
+        ```
+        """
         default_value = default_value or (
             (tabs[0]["value"] if isinstance(tabs[0], dict) else tabs[0]) if tabs and len(tabs) > 0 else None
         )
@@ -1635,6 +2566,23 @@ class RLBuilder(RouteLitBuilder):
         keep_mounted: Optional[bool] = None,
         **kwargs: Any,
     ) -> MTTab:
+        """
+        Helper to create an `MTTab` configuration object.
+        Used to describe the props for each tab in the `tabs` function.
+
+        Args:
+            value (str): Tab value.
+            label (Optional[str]): Tab label.
+            color (Optional[str]): Accent color.
+            left_section (Optional[RouteLitElement]): Left adornment for tab.
+            right_section (Optional[RouteLitElement]): Right adornment for tab.
+            size (Optional[Union[str, int]]): Size for the tab.
+            keep_mounted (Optional[bool]): Keep panel mounted when inactive.
+            kwargs: Additional props to set.
+
+        Returns:
+            MTTab: Tab configuration object.
+        """
         return MTTab(  # type: ignore[no-any-return]
             value=value,
             label=label,
@@ -1662,6 +2610,26 @@ class RLBuilder(RouteLitBuilder):
         text: Optional[str] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Inline alert with optional icon and close button.
+
+        Args:
+            title (str): Alert title.
+            auto_contrast (Optional[bool]): Improve contrast automatically.
+            key (Optional[str]): Explicit element key.
+            color (Optional[str]): Color variant.
+            radius (Optional[Union[str, int]]): Corner radius.
+            icon (Optional[RouteLitElement]): Leading icon.
+            with_close_button (Optional[bool]): Show close button.
+            close_button_label (Optional[str]): Accessible label for close button.
+            on_close (Optional[Callable[[], bool]]): Close handler.
+            variant (Optional[Literal["default", "filled", "light", "outline", "white", "transparent"]]): Visual variant.
+            text (Optional[str]): Alert content.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the alert element.
+        """
         return self._x_dialog(  # type: ignore[return-value]
             "alert",
             key or self._new_widget_id("alert", title),
@@ -1693,6 +2661,25 @@ class RLBuilder(RouteLitBuilder):
         with_close_button: Optional[bool] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Notification element for transient messages.
+
+        Args:
+            title (str): Notification title.
+            key (Optional[str]): Explicit element key.
+            close_button_props (Optional[dict[str, Any]]): Close button props.
+            color (Optional[str]): Color variant.
+            icon (Optional[RouteLitElement]): Leading icon.
+            on_close (Optional[Callable[[], bool]]): Close handler.
+            radius (Optional[Union[str, int]]): Corner radius.
+            text (Optional[str]): Notification content.
+            with_border (Optional[bool]): Show border.
+            with_close_button (Optional[bool]): Show close button.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the notification element.
+        """
         return self._x_dialog(  # type: ignore[return-value]
             "notification",
             key or self._new_widget_id("notification", title),
@@ -1722,6 +2709,21 @@ class RLBuilder(RouteLitBuilder):
         transition_duration: Optional[int] = None,
         **kwargs: Any,
     ) -> None:
+        """
+        Determinate progress bar.
+
+        Args:
+            value (float): Progress value from 0 to 100.
+            key (Optional[str]): Explicit element key.
+            animated (Optional[bool]): Animate stripes.
+            auto_contrast (Optional[bool]): Improve contrast automatically.
+            color (Optional[str]): Color variant.
+            radius (Optional[Union[str, int]]): Corner radius.
+            size (Optional[Union[str, int]]): Height of the bar.
+            striped (Optional[bool]): Show stripes.
+            transition_duration (Optional[int]): Animation duration in ms.
+            kwargs: Additional props to set.
+        """
         self._create_element(
             key=key or self._new_text_id("progress"),
             name="progress",
@@ -1745,6 +2747,17 @@ class RLBuilder(RouteLitBuilder):
         with_close_button: Optional[bool] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Open a dialog container for arbitrary content.
+
+        Args:
+            key (Optional[str]): Explicit element key.
+            with_close_button (Optional[bool]): Show close button.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the dialog element.
+        """
         return super()._x_dialog(  # type: ignore[return-value]
             "dialog",
             key or self._new_text_id("dialog"),
@@ -1784,6 +2797,41 @@ class RLBuilder(RouteLitBuilder):
         z_index: Optional[Union[str, int]] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Drawer component that slides from screen edges.
+
+        Args:
+            key (Optional[str]): Explicit element key.
+            close_button_props (Optional[dict]): Close button props.
+            close_on_click_outside (Optional[bool]): Close when clicking outside.
+            close_on_escape (Optional[bool]): Close on Escape key.
+            on_close (Optional[Callable[[], bool]]): Close handler.
+            keep_mounted (Optional[bool]): Keep in DOM when closed.
+            lock_scroll (Optional[bool]): Lock document scroll when opened.
+            offset (Optional[Union[str, int]]): Offset from viewport edges.
+            overlay_props (Optional[dict]): Overlay props.
+            padding (Optional[Union[str, int]]): Content padding.
+            portal_props (Optional[dict]): Portal props.
+            position (Optional[str]): Edge position.
+            radius (Optional[Union[str, int]]): Corner radius.
+            remove_scroll_props (Optional[dict]): Remove scroll props.
+            return_focus (Optional[bool]): Return focus to trigger on close.
+            scroll_area_component (Optional[str]): Custom scroll area component.
+            shadow (Optional[str]): Shadow preset.
+            size (Optional[Union[str, int]]): Drawer size.
+            stack_id (Optional[str]): Stack identifier.
+            title (Optional[str]): Header title.
+            transition_props (Optional[dict]): Transition props.
+            trap_focus (Optional[bool]): Trap focus inside drawer.
+            with_close_button (Optional[bool]): Show close button.
+            with_overlay (Optional[bool]): Show overlay.
+            within_portal (Optional[bool]): Render within portal.
+            z_index (Optional[Union[str, int]]): CSS z-index.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the drawer element.
+        """
         return super()._x_dialog(  # type: ignore[return-value]
             "drawer",
             key or self._new_text_id("drawer"),
@@ -1824,6 +2872,18 @@ class RLBuilder(RouteLitBuilder):
         with_close_button: Optional[bool] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Centered modal dialog.
+
+        Args:
+            key (Optional[str]): Explicit element key.
+            title (Optional[str]): Header title.
+            with_close_button (Optional[bool]): Show close button.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the modal element.
+        """
         return super()._x_dialog(  # type: ignore[return-value]
             "modal",
             key or self._new_text_id("modal"),
@@ -1839,6 +2899,9 @@ class RLBuilder(RouteLitBuilder):
         key: Optional[str] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Internal helper: open a modal by default when using dialog-like APIs.
+        """
         return self.modal(key or self._new_text_id("modal"), **kwargs)
 
     def affix(
@@ -1846,6 +2909,16 @@ class RLBuilder(RouteLitBuilder):
         key: Optional[str] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Position an element at a fixed offset from viewport edges.
+
+        Args:
+            key (Optional[str]): Explicit element key.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the affix element.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="affix",
             key=key or self._new_text_id("affix"),
@@ -1860,6 +2933,14 @@ class RLBuilder(RouteLitBuilder):
         key: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
+        """
+        Display an image.
+
+        Args:
+            src (str): Image source URL.
+            key (Optional[str]): Explicit element key.
+            kwargs: Additional props to set.
+        """
         self._create_element(
             name="image",
             key=key or self._new_widget_id("image", src),
@@ -1873,6 +2954,14 @@ class RLBuilder(RouteLitBuilder):
         key: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
+        """
+        Format and display a number according to given options.
+
+        Args:
+            value (Union[float, int, str]): Value to format.
+            key (Optional[str]): Explicit element key.
+            kwargs: Additional props to set.
+        """
         self._create_element(
             key=key or self._new_text_id("numberformatter"),
             name="numberformatter",
@@ -1889,6 +2978,20 @@ class RLBuilder(RouteLitBuilder):
         max_height: Optional[int] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Collapsible content with show/hide controls.
+
+        Args:
+            show_label (str): Label when collapsed.
+            hide_label (str): Label when expanded.
+            key (Optional[str]): Explicit element key.
+            initial_state (bool): Initial expanded state.
+            max_height (Optional[int]): Max visible height when collapsed.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the spoiler element.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="spoiler",
             key=key or self._new_text_id("spoiler"),
@@ -1909,6 +3012,14 @@ class RLBuilder(RouteLitBuilder):
         key: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
+        """
+        Render plain text content.
+
+        Args:
+            text (str): Text content.
+            key (Optional[str]): Explicit element key.
+            kwargs: Additional props to set.
+        """
         self._create_element(
             name="text",
             key=key or self._new_text_id("text"),
@@ -1923,6 +3034,15 @@ class RLBuilder(RouteLitBuilder):
         order: Optional[int] = None,
         **kwargs: Any,
     ) -> None:
+        """
+        Title text with semantic order (h1-h6).
+
+        Args:
+            text (str): Title content.
+            key (Optional[str]): Explicit element key.
+            order (Optional[int]): Heading level (1-6).
+            kwargs: Additional props to set.
+        """
         self._create_element(
             name="title",
             key=key or self._new_text_id("title"),
@@ -1940,6 +3060,21 @@ class RLBuilder(RouteLitBuilder):
         sticky_header: Optional[bool] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Data table with optional head, body, foot and caption.
+
+        Args:
+            key (Optional[str]): Explicit element key.
+            body (Optional[list[list[Any]]]): Table body rows.
+            caption (Optional[str]): Table caption.
+            head (Optional[list[str]]): Header row cells.
+            foot (Optional[list[str]]): Footer row cells.
+            sticky_header (Optional[bool]): Make header sticky when scrolling.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the table element.
+        """
         data = {
             "body": body,
             "caption": caption,
@@ -1959,6 +3094,14 @@ class RLBuilder(RouteLitBuilder):
         key: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
+        """
+        Add a caption to the current table.
+
+        Args:
+            text (str): Caption text.
+            key (Optional[str]): Explicit element key.
+            kwargs: Additional props to set.
+        """
         self._create_element(
             name="tablecaption",
             key=key or self._new_text_id("tablecaption"),
@@ -1971,6 +3114,16 @@ class RLBuilder(RouteLitBuilder):
         key: Optional[str] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Create a table head section.
+
+        Args:
+            key (Optional[str]): Explicit element key.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the head section.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="tablehead",
             key=key or self._new_text_id("tablehead"),
@@ -1983,6 +3136,16 @@ class RLBuilder(RouteLitBuilder):
         key: Optional[str] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Create a table foot section.
+
+        Args:
+            key (Optional[str]): Explicit element key.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the foot section.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="tablefoot",
             key=key or self._new_text_id("tablefoot"),
@@ -1995,6 +3158,16 @@ class RLBuilder(RouteLitBuilder):
         key: Optional[str] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Create a table row.
+
+        Args:
+            key (Optional[str]): Explicit element key.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the row.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="tablerow",
             key=key or self._new_text_id("tablerow"),
@@ -2009,6 +3182,17 @@ class RLBuilder(RouteLitBuilder):
         key: Optional[str] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Create a table cell.
+
+        Args:
+            text (Optional[str]): Cell text content.
+            key (Optional[str]): Explicit element key.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the cell.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="tablecell",
             key=key or self._new_text_id("tablecell"),
@@ -2023,6 +3207,17 @@ class RLBuilder(RouteLitBuilder):
         key: Optional[str] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Create a table header cell.
+
+        Args:
+            text (Optional[str]): Header text content.
+            key (Optional[str]): Explicit element key.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the header cell.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="tableheader",
             key=key or self._new_text_id("tableheader"),
@@ -2035,6 +3230,16 @@ class RLBuilder(RouteLitBuilder):
         key: Optional[str] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Create a table body section.
+
+        Args:
+            key (Optional[str]): Explicit element key.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the body section.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="tablebody",
             key=key or self._new_text_id("tablebody"),
@@ -2052,6 +3257,20 @@ class RLBuilder(RouteLitBuilder):
         min_width: Optional[Union[str, int]] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Scrollable container for large tables.
+
+        Args:
+            key (Optional[str]): Explicit element key.
+            max_height (Optional[Union[str, int]]): Maximum height.
+            max_width (Optional[Union[str, int]]): Maximum width.
+            min_height (Optional[Union[str, int]]): Minimum height.
+            min_width (Optional[Union[str, int]]): Minimum width.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the scroll container.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="tablescrollcontainer",
             key=key or self._new_text_id("tablescrollcontainer"),
@@ -2070,6 +3289,16 @@ class RLBuilder(RouteLitBuilder):
         key: Optional[str] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Generic layout container.
+
+        Args:
+            key (Optional[str]): Explicit element key.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the box element.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="box",
             key=key or self._new_text_id("box"),
@@ -2086,6 +3315,19 @@ class RLBuilder(RouteLitBuilder):
         with_border: Optional[bool] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Container with background, border, and shadow.
+
+        Args:
+            key (Optional[str]): Explicit element key.
+            radius (Optional[Union[str, int]]): Corner radius.
+            shadow (Optional[str]): Shadow preset.
+            with_border (Optional[bool]): Show border.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the paper element.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="paper",
             key=key or self._new_text_id("paper"),
@@ -2111,6 +3353,23 @@ class RLBuilder(RouteLitBuilder):
         viewport_props: Optional[dict[str, Any]] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Scrollable area with configurable scrollbars and behavior.
+
+        Args:
+            key (Optional[str]): Explicit element key.
+            offset_scrollbars (Optional[Union[bool, Literal["x", "y", "present"]]): Offset scrollbars from content.
+            overscroll_behavior (Optional[str]): CSS overscroll behavior.
+            scroll_hide_delay (Optional[int]): Delay before hiding scrollbars.
+            scrollbar_size (Optional[Union[str, int]]): Scrollbar size.
+            scrollbars (Optional[Union[bool, Literal["x", "y", "xy"]]): Which axes show scrollbars.
+            type (Optional[Literal["auto", "scroll", "always", "hover", "never"]]): Scrollbar visibility policy.
+            viewport_props (Optional[dict[str, Any]]): Viewport element props.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the scroll area.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="scrollarea",
             key=key or self._new_text_id("scrollarea"),
@@ -2198,6 +3457,74 @@ class RLBuilder(RouteLitBuilder):
         key: Optional[str] = None,
         **kwargs: Any,
     ) -> Optional[datetime.datetime]:
+        """
+        Date-time picker input with calendar and time selection.
+
+        Args:
+            label (str): Field label.
+            value (Optional[Union[datetime.datetime, str]]): Current value.
+            clearable (Optional[bool]): Show clear button.
+            columns_to_scroll (Optional[int]): Number of months to scroll.
+            description (Optional[str]): Helper text under the label.
+            disabled (Optional[bool]): Disable interaction.
+            dropdown_type (Optional[Literal["modal", "popover"]]): Dropdown type.
+            error (Optional[str]): Error message.
+            first_day_of_week (Optional[Literal[0,1,2,3,4,5,6]]): First day of week.
+            header_controls_order (Optional[list[Literal["level", "next", "previous"]]]): Header controls order.
+            hide_outside_dates (Optional[bool]): Hide outside month dates.
+            hide_weekdays (Optional[bool]): Hide weekday labels.
+            highlight_today (Optional[bool]): Highlight current date.
+            input_size (Optional[str]): Control size.
+            input_wrapper_order (Optional[list[str]]): Input wrapper parts order.
+            label_props (Optional[dict[str, Any]]): Label props.
+            label_separator (Optional[str]): Separator between date and time.
+            left_section (Optional[RouteLitElement]): Left adornment.
+            left_section_props (Optional[dict[str, Any]]): Left adornment props.
+            left_section_width (Optional[str]): Left adornment width.
+            level (Optional[Literal["month", "year", "decade"]]): Initial calendar level.
+            locale (Optional[str]): Locale code.
+            max_date (Optional[Union[datetime.datetime, str]]): Max date.
+            max_level (Optional[Literal["month", "year", "decade"]]): Max calendar level.
+            min_date (Optional[Union[datetime.datetime, str]]): Min date.
+            months_list_format (Optional[str]): Months list format.
+            number_of_columns (Optional[int]): Number of months displayed.
+            next_label (Optional[str]): Next button label.
+            next_icon (Optional[RouteLitElement]): Next button icon.
+            on_change (Optional[Callable[[datetime.datetime], None]]): Change handler.
+            popover_props (Optional[dict[str, Any]]): Popover props.
+            presets (Optional[list[dict[str, Any]]]): Presets configuration.
+            previous_icon (Optional[RouteLitElement]): Previous button icon.
+            previous_label (Optional[str]): Previous button label.
+            placeholder (Optional[str]): Input placeholder.
+            radius (Optional[Union[str, int]]): Corner radius.
+            read_only (Optional[bool]): Read-only state.
+            required (Optional[bool]): Mark as required.
+            right_section (Optional[RouteLitElement]): Right adornment.
+            right_section_pointer_events (Optional[str]): Pointer events for right section.
+            right_section_props (Optional[dict[str, Any]]): Right adornment props.
+            right_section_width (Optional[str]): Right adornment width.
+            size (Optional[str]): Control size.
+            sort_dates (Optional[bool]): Sort selected dates.
+            submit_button_props (Optional[dict[str, Any]]): Submit button props.
+            time_picker_props (Optional[dict[str, Any]]): Time picker props.
+            value_format (Optional[str]): Output value format.
+            weekday_format (Optional[str]): Weekday label format.
+            weekend_days (Optional[list[Literal[0,1,2,3,4,5,6]]]): Weekend days indices.
+            with_asterisk (Optional[bool]): Show required asterisk.
+            with_cell_spacing (Optional[bool]): Add spacing between cells.
+            with_error_styles (Optional[bool]): Apply error styles.
+            with_seconds (Optional[bool]): Include seconds selector.
+            with_week_numbers (Optional[bool]): Show week numbers.
+            wrapper_props (Optional[dict[str, Any]]): Wrapper props.
+            year_label_format (Optional[str]): Year label format.
+            years_list_format (Optional[str]): Years list format.
+            pointer (Optional[bool]): Use pointer cursor.
+            key (Optional[str]): Explicit element key.
+            kwargs: Additional props to set.
+
+        Returns:
+            Optional[datetime.datetime]: Current value.
+        """
         return cast(
             Optional[datetime.datetime],
             self._x_input(
@@ -2326,6 +3653,53 @@ class RLBuilder(RouteLitBuilder):
         years_list_format: Optional[str] = None,
         **kwargs: Any,
     ) -> Optional[Union[datetime.date, list[datetime.date], tuple[datetime.date, datetime.date]]]:
+        """
+        Calendar date picker supporting single, range, and multiple modes.
+
+        Args:
+            label (str): Field label.
+            value (Optional[...]): Current value in the selected mode.
+            allow_deselect (Optional[bool]): Allow clearing selection.
+            allow_single_date_in_range (Optional[bool]): Allow single date in range mode.
+            aria_labels (Optional[dict]): ARIA labels.
+            columns_to_scroll (Optional[int]): Months to scroll.
+            decade_label_format (Optional[str]): Decade label format.
+            default_level (Optional[Literal["month", "year", "decade"]]): Initial calendar level.
+            description (Optional[str]): Helper text under the label.
+            enable_keyboard_navigation (Optional[bool]): Enable keyboard navigation.
+            first_day_of_week (Optional[Literal[0,1,2,3,4,5,6]]): First day of week.
+            header_controls_order (Optional[list[...]]): Header controls order.
+            hide_outside_dates (Optional[bool]): Hide outside month dates.
+            hide_weekdays (Optional[bool]): Hide weekday labels.
+            highlight_today (Optional[bool]): Highlight current date.
+            key (Optional[str]): Explicit element key.
+            level (Optional[str]): Current level.
+            locale (Optional[str]): Locale code.
+            max_date (Optional[Union[str, datetime.date]]): Max date.
+            max_level (Optional[str]): Max level.
+            min_date (Optional[Union[str, datetime.date]]): Min date.
+            month_label_format (Optional[str]): Month label format.
+            months_list_format (Optional[str]): Months list format.
+            next_icon (Optional[RouteLitElement]): Next button icon.
+            next_label (Optional[str]): Next button label.
+            number_of_columns (Optional[int]): Months displayed.
+            on_change (Optional[Callable[[...], None]]): Change handler.
+            presets (Optional[list]): Preset ranges.
+            previous_icon (Optional[RouteLitElement]): Previous button icon.
+            previous_label (Optional[str]): Previous button label.
+            size (Optional[str]): Control size.
+            type (Optional[Literal["default", "range", "multiple"]]): Picker mode.
+            weekday_format (Optional[str]): Weekday label format.
+            weekend_days (Optional[list[...]]): Weekend days indices.
+            with_cell_spacing (Optional[bool]): Add spacing between cells.
+            with_week_numbers (Optional[bool]): Show week numbers.
+            year_label_format (Optional[str]): Year label format.
+            years_list_format (Optional[str]): Years list format.
+            kwargs: Additional props to set.
+
+        Returns:
+            Optional[Union[datetime.date, list[datetime.date], tuple[datetime.date, datetime.date]]]: Current value.
+        """
         return cast(
             Optional[Union[datetime.date, list[datetime.date], tuple[datetime.date, datetime.date]]],
             self._x_input(
@@ -2452,6 +3826,85 @@ class RLBuilder(RouteLitBuilder):
         years_list_format: Optional[str] = None,
         **kwargs: Any,
     ) -> Optional[Union[datetime.date, list[datetime.date], tuple[datetime.date, datetime.date]]]:
+        """
+        Text input with integrated date picker dropdown.
+
+        Args:
+            label (str): Field label.
+            value (Optional[...]): Current value in the selected mode.
+            key (Optional[str]): Explicit element key.
+            description (Optional[str]): Helper text.
+            on_change (Optional[Callable[[Any], None]]): Change handler.
+            allow_deselect (Optional[bool]): Allow clearing selection.
+            allow_single_date_in_range (Optional[bool]): Allow single date in range mode.
+            aria_labels (Optional[dict]): ARIA labels.
+            clear_button_props (Optional[dict]): Clear button props.
+            clearable (Optional[bool]): Enable clear button.
+            close_on_change (Optional[bool]): Close dropdown on change.
+            columns_to_scroll (Optional[int]): Months to scroll.
+            decade_label_format (Optional[str]): Decade label format.
+            default_level (Optional[Literal["month", "year", "decade"]]): Initial calendar level.
+            description_props (Optional[dict]): Description props.
+            disabled (Optional[bool]): Disable interaction.
+            dropdown_type (Optional[Literal["modal", "popover"]]): Dropdown type.
+            enable_keyboard_navigation (Optional[bool]): Enable keyboard navigation.
+            error (Optional[str]): Error message.
+            error_props (Optional[dict]): Error props.
+            first_day_of_week (Optional[Literal[0,1,2,3,4,5,6]]): First day of week.
+            header_controls_order (Optional[list[...]]): Header controls order.
+            hide_outside_dates (Optional[bool]): Hide outside month dates.
+            hide_weekdays (Optional[bool]): Hide weekday labels.
+            highlight_today (Optional[bool]): Highlight current date.
+            input_size (Optional[str]): Control size.
+            input_wrapper_order (Optional[list[Literal["input","label","description","error"]]]): Wrapper parts order.
+            label_props (Optional[dict]): Label props.
+            label_separator (Optional[str]): Separator for range values.
+            left_section (Optional[RouteLitElement]): Left adornment.
+            left_section_pointer_events (Optional[str]): Pointer events for left section.
+            left_section_props (Optional[dict]): Left adornment props.
+            left_section_width (Optional[str]): Left adornment width.
+            level (Optional[Literal["month", "year", "decade"]]): Initial calendar level.
+            locale (Optional[str]): Locale code.
+            max_date (Optional[Union[str, datetime.date]]): Max date.
+            max_level (Optional[Literal["month", "year", "decade"]]): Max calendar level.
+            min_date (Optional[Union[str, datetime.date]]): Min date.
+            modal_props (Optional[dict]): Modal props.
+            month_label_format (Optional[str]): Month label format.
+            months_list_format (Optional[str]): Months list format.
+            next_icon (Optional[RouteLitElement]): Next button icon.
+            next_label (Optional[str]): Next button label.
+            number_of_columns (Optional[int]): Months displayed.
+            placeholder (Optional[str]): Input placeholder.
+            pointer (Optional[bool]): Use pointer cursor.
+            popover_props (Optional[dict]): Popover props.
+            presets (Optional[list]): Preset ranges.
+            previous_icon (Optional[RouteLitElement]): Previous button icon.
+            previous_label (Optional[str]): Previous button label.
+            radius (Optional[Union[str, int]]): Corner radius.
+            read_only (Optional[bool]): Read-only state.
+            required (Optional[bool]): Mark as required.
+            right_section (Optional[RouteLitElement]): Right adornment.
+            right_section_pointer_events (Optional[str]): Pointer events for right section.
+            right_section_props (Optional[dict]): Right adornment props.
+            right_section_width (Optional[str]): Right adornment width.
+            size (Optional[str]): Control size.
+            sort_dates (Optional[bool]): Sort selected dates.
+            type (Optional[str]): Picker mode.
+            value_format (Optional[str]): Output value format.
+            weekday_format (Optional[str]): Weekday label format.
+            weekend_days (Optional[list]): Weekend days indices.
+            with_asterisk (Optional[bool]): Show required asterisk.
+            with_cell_spacing (Optional[bool]): Add spacing between cells.
+            with_error_styles (Optional[bool]): Apply error styles.
+            with_week_numbers (Optional[bool]): Show week numbers.
+            wrapper_props (Optional[dict]): Wrapper props.
+            year_label_format (Optional[str]): Year label format.
+            years_list_format (Optional[str]): Years list format.
+            kwargs: Additional props to set.
+
+        Returns:
+            Optional[Union[datetime.date, list[datetime.date], tuple[datetime.date, datetime.date]]]: Current value.
+        """
         return cast(
             Optional[Union[datetime.date, list[datetime.date], tuple[datetime.date, datetime.date]]],
             self._x_input(
@@ -2546,6 +3999,18 @@ class RLBuilder(RouteLitBuilder):
         key: Optional[str] = None,
         **kwargs: Any,
     ) -> Optional[datetime.time]:
+        """
+        Time input with support for parsing from string.
+
+        Args:
+            label (Optional[str]): Field label.
+            value (Optional[Union[datetime.time, str]]): Current value.
+            key (Optional[str]): Explicit element key.
+            kwargs: Additional props to set.
+
+        Returns:
+            Optional[datetime.time]: Current value.
+        """
         return cast(
             Optional[datetime.time],
             self._x_input(
@@ -2604,6 +4069,56 @@ class RLBuilder(RouteLitBuilder):
         y_axis_props: Optional[dict[str, Any]] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Area chart for time series or continuous data.
+
+        Args:
+            data (list): Dataset.
+            data_key (str): X-axis data key.
+            series (list[dict[str, Any]]): Series configuration.
+            key (Optional[str]): Explicit element key.
+            active_dot_props (Optional[dict[str, Any]]): Active dot props.
+            area_chart_props (Optional[dict[str, Any]]): Chart container props.
+            area_props (Optional[dict[str, Any]]): Area props.
+            connect_nulls (Optional[bool]): Connect across null values.
+            curve_type (Optional[str]): Curve interpolation type.
+            dot_props (Optional[dict[str, Any]]): Dot props.
+            fill_opacity (float): Fill opacity for area.
+            grid_axis (Optional[str]): Grid axis.
+            grid_color (Optional[str]): Grid color.
+            grid_props (Optional[dict[str, Any]]): Grid props.
+            legend_props (Optional[dict[str, Any]]): Legend props.
+            orientation (Optional[str]): Chart orientation.
+            reference_lines (Optional[list[dict[str, Any]]]): Reference lines.
+            right_y_axis_label (Optional[str]): Secondary Y axis label.
+            right_y_axis_props (Optional[dict[str, Any]]): Secondary Y axis props.
+            split_colors (Optional[list[str]]): Split area colors.
+            split_offset (Optional[float]): Split offset value.
+            stroke_dasharray (Optional[Union[str, int]]): Stroke dash pattern.
+            stroke_width (Optional[int]): Line width.
+            text_color (Optional[str]): Text color.
+            tick_line (Optional[str]): Tick line display.
+            tooltip_animation_duration (int): Tooltip animation duration.
+            tooltip_props (Optional[dict[str, Any]]): Tooltip props.
+            type (Optional[str]): Chart type variant.
+            unit (Optional[str]): Unit suffix.
+            with_dots (Optional[bool]): Show dots.
+            with_gradient (Optional[bool]): Fill with gradient.
+            with_legend (Optional[bool]): Show legend.
+            with_point_labels (Optional[bool]): Show point labels.
+            with_right_y_axis (Optional[bool]): Enable right Y axis.
+            with_tooltip (Optional[bool]): Show tooltip.
+            with_x_axis (Optional[bool]): Show X axis.
+            with_y_axis (Optional[bool]): Show Y axis.
+            x_axis_label (Optional[str]): X axis label.
+            x_axis_props (Optional[dict[str, Any]]): X axis props.
+            y_axis_label (Optional[str]): Y axis label.
+            y_axis_props (Optional[dict[str, Any]]): Y axis props.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the area chart element.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="areachart",
             key=key or self._new_text_id("areachart"),
@@ -2695,6 +4210,53 @@ class RLBuilder(RouteLitBuilder):
         y_axis_props: Optional[dict[str, Any]] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Bar chart for categorical or time series data.
+
+        Args:
+            data (list): Dataset.
+            data_key (str): X-axis data key.
+            series (list[dict[str, Any]]): Series configuration.
+            bar_chart_props (Optional[dict[str, Any]]): Chart container props.
+            bar_label_color (Optional[str]): Value label color.
+            bar_props (Optional[dict[str, Any]]): Bar props.
+            cursor_fill (Optional[str]): Cursor overlay color.
+            fill_opacity (Optional[float]): Bar fill opacity.
+            get_bar_color (Optional[Callable[[float, dict[str, Any]], str]]): Dynamic color callback.
+            grid_axis (Optional[Literal["none","x","y","xy"]]): Grid axis.
+            grid_color (Optional[str]): Grid color.
+            grid_props (Optional[dict[str, Any]]): Grid props.
+            key (Optional[str]): Explicit element key.
+            legend_props (Optional[dict[str, Any]]): Legend props.
+            max_bar_width (Optional[int]): Max bar width.
+            min_bar_size (Optional[int]): Min bar size.
+            orientation (Optional[Literal["horizontal","vertical"]]): Orientation.
+            reference_lines (Optional[list[dict[str, Any]]]): Reference lines.
+            right_y_axis_label (Optional[str]): Secondary Y axis label.
+            right_y_axis_props (Optional[dict[str, Any]]): Secondary Y axis props.
+            stroke_dasharray (Optional[Union[str, int]]): Border dash pattern.
+            text_color (Optional[str]): Text color.
+            tick_line (Optional[Literal["none","x","y","xy"]]): Tick line display.
+            tooltip_animation_duration (Optional[int]): Tooltip animation duration.
+            tooltip_props (Optional[dict[str, Any]]): Tooltip props.
+            type (Optional[str]): Chart type variant.
+            unit (Optional[str]): Unit suffix.
+            value_label_props (Optional[dict[str, Any]]): Value label props.
+            with_bar_value_label (Optional[bool]): Show value labels above bars.
+            with_legend (Optional[bool]): Show legend.
+            with_right_y_axis (Optional[bool]): Enable right Y axis.
+            with_tooltip (Optional[bool]): Show tooltip.
+            with_x_axis (Optional[bool]): Show X axis.
+            with_y_axis (Optional[bool]): Show Y axis.
+            x_axis_label (Optional[str]): X axis label.
+            x_axis_props (Optional[dict[str, Any]]): X axis props.
+            y_axis_label (Optional[str]): Y axis label.
+            y_axis_props (Optional[dict[str, Any]]): Y axis props.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the bar chart element.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="barchart",
             key=key or self._new_text_id("barchart"),
@@ -2784,6 +4346,54 @@ class RLBuilder(RouteLitBuilder):
         y_axis_props: Optional[dict[str, Any]] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Line chart for continuous data.
+
+        Args:
+            data (list): Dataset.
+            data_key (str): X-axis data key.
+            series (list[dict[str, Any]]): Series configuration.
+            key (Optional[str]): Explicit element key.
+            active_dot_props (Optional[dict[str, Any]]): Active dot props.
+            connect_nulls (Optional[bool]): Connect across null values.
+            curve_type (Optional[str]): Curve interpolation type.
+            dot_props (Optional[dict[str, Any]]): Dot props.
+            fill_opacity (Optional[float]): Area fill opacity for gradients.
+            gradient_stops (Optional[list[dict[str, Any]]]): Gradient configuration.
+            grid_axis (Optional[str]): Grid axis.
+            grid_color (Optional[str]): Grid color.
+            grid_props (Optional[dict[str, Any]]): Grid props.
+            legend_props (Optional[dict[str, Any]]): Legend props.
+            line_chart_props (Optional[dict[str, Any]]): Chart container props.
+            line_props (Optional[dict[str, Any]]): Line props.
+            orientation (Optional[str]): Chart orientation.
+            reference_lines (Optional[list[dict[str, Any]]]): Reference lines.
+            right_y_axis_label (Optional[str]): Secondary Y axis label.
+            right_y_axis_props (Optional[dict[str, Any]]): Secondary Y axis props.
+            stroke_dasharray (Optional[str]): Line dash pattern.
+            stroke_width (Optional[float]): Line width.
+            text_color (Optional[str]): Text color.
+            tick_line (Optional[str]): Tick line display.
+            tooltip_animation_duration (Optional[int]): Tooltip animation duration.
+            tooltip_props (Optional[dict[str, Any]]): Tooltip props.
+            type (Optional[str]): Chart type variant.
+            unit (Optional[str]): Unit suffix.
+            with_dots (Optional[bool]): Show dots.
+            with_legend (Optional[bool]): Show legend.
+            with_point_labels (Optional[bool]): Show point labels.
+            with_right_y_axis (Optional[bool]): Enable right Y axis.
+            with_tooltip (Optional[bool]): Show tooltip.
+            with_x_axis (Optional[bool]): Show X axis.
+            with_y_axis (Optional[bool]): Show Y axis.
+            x_axis_label (Optional[str]): X axis label.
+            x_axis_props (Optional[dict[str, Any]]): X axis props.
+            y_axis_label (Optional[str]): Y axis label.
+            y_axis_props (Optional[dict[str, Any]]): Y axis props.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the line chart element.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="linechart",
             key=key or self._new_text_id("linechart"),
@@ -2876,6 +4486,56 @@ class RLBuilder(RouteLitBuilder):
         y_axis_props: Optional[dict[str, Any]] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Composite chart that can combine bars, lines, and areas.
+
+        Args:
+            data (list): Dataset.
+            data_key (str): X-axis data key.
+            series (list[dict[str, Any]]): Series configuration.
+            key (Optional[str]): Explicit element key.
+            active_dot_props (Optional[dict[str, Any]]): Active dot props.
+            area_props (Optional[dict[str, Any]]): Area props.
+            bar_props (Optional[dict[str, Any]]): Bar props.
+            children (Optional[Any]): Extra child elements.
+            composed_chart_props (Optional[dict[str, Any]]): Chart container props.
+            connect_nulls (Optional[bool]): Connect across null values.
+            curve_type (Optional[str]): Curve interpolation type.
+            dot_props (Optional[dict[str, Any]]): Dot props.
+            grid_axis (Optional[str]): Grid axis.
+            grid_color (Optional[str]): Grid color.
+            grid_props (Optional[dict[str, Any]]): Grid props.
+            legend_props (Optional[dict[str, Any]]): Legend props.
+            line_props (Optional[dict[str, Any]]): Line props.
+            max_bar_width (Optional[int]): Max bar width.
+            min_bar_size (Optional[int]): Min bar size.
+            reference_lines (Optional[list[dict[str, Any]]]): Reference lines.
+            right_y_axis_label (Optional[str]): Secondary Y axis label.
+            right_y_axis_props (Optional[dict[str, Any]]): Secondary Y axis props.
+            stroke_dasharray (Optional[str]): Stroke dash pattern.
+            stroke_width (Optional[int]): Line width.
+            text_color (Optional[str]): Text color.
+            tick_line (Optional[str]): Tick line display.
+            tooltip_animation_duration (Optional[int]): Tooltip animation duration.
+            tooltip_props (Optional[dict[str, Any]]): Tooltip props.
+            unit (Optional[str]): Unit suffix.
+            with_bar_value_label (Optional[bool]): Show value labels on bars.
+            with_dots (Optional[bool]): Show dots on lines.
+            with_legend (Optional[bool]): Show legend.
+            with_point_labels (Optional[bool]): Show point labels on lines.
+            with_right_y_axis (Optional[bool]): Enable right Y axis.
+            with_tooltip (Optional[bool]): Show tooltip.
+            with_x_axis (Optional[bool]): Show X axis.
+            with_y_axis (Optional[bool]): Show Y axis.
+            x_axis_label (Optional[str]): X axis label.
+            x_axis_props (Optional[dict[str, Any]]): X axis props.
+            y_axis_label (Optional[str]): Y axis label.
+            y_axis_props (Optional[dict[str, Any]]): Y axis props.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the composite chart element.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="compositechart",
             key=key or self._new_text_id("compositechart"),
@@ -2949,6 +4609,35 @@ class RLBuilder(RouteLitBuilder):
         with_tooltip: Optional[bool] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Donut chart to visualize parts of a whole.
+
+        Args:
+            data (list): Dataset.
+            chart_label (Optional[Union[str, int]]): Center label.
+            end_angle (Optional[int]): End angle.
+            key (Optional[str]): Explicit element key.
+            label_color (Optional[str]): Label color.
+            labels_type (Optional[str]): Label content type.
+            padding_angle (Optional[int]): Angle between segments.
+            pie_chart_props (Optional[dict[str, Any]]): Chart container props.
+            pie_props (Optional[dict[str, Any]]): Pie props.
+            size (Optional[int]): Chart size.
+            start_angle (Optional[int]): Start angle.
+            stroke_color (Optional[str]): Segment border color.
+            stroke_width (Optional[int]): Segment border width.
+            thickness (Optional[int]): Ring thickness.
+            tooltip_animation_duration (Optional[int]): Tooltip animation duration.
+            tooltip_data_source (Optional[Literal["all","segment"]]): Tooltip data source.
+            tooltip_props (Optional[dict[str, Any]]): Tooltip props.
+            with_labels (Optional[bool]): Show labels.
+            with_labels_line (Optional[bool]): Show label connector lines.
+            with_tooltip (Optional[bool]): Show tooltip.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the donut chart element.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="donutchart",
             key=key or self._new_text_id("donutchart"),
@@ -2996,6 +4685,30 @@ class RLBuilder(RouteLitBuilder):
         with_tooltip: Optional[bool] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Funnel chart for conversion or pipeline visualization.
+
+        Args:
+            data (list): Dataset.
+            funnel_chart_props (Optional[dict[str, Any]]): Chart container props.
+            funnel_props (Optional[dict[str, Any]]): Funnel props.
+            key (Optional[str]): Explicit element key.
+            label_color (Optional[str]): Label color.
+            labels_position (Optional[Literal["left","right","inside"]]): Labels position.
+            size (Optional[int]): Chart size.
+            stroke_color (Optional[str]): Border color.
+            stroke_width (Optional[int]): Border width.
+            tooltip_animation_duration (Optional[int]): Tooltip animation duration.
+            tooltip_data_source (Optional[Literal["all","segment"]]): Tooltip data source.
+            tooltip_props (Optional[dict[str, Any]]): Tooltip props.
+            value_formatter (Optional[Any]): Value formatter.
+            with_labels (Optional[bool]): Show labels.
+            with_tooltip (Optional[bool]): Show tooltip.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the funnel chart element.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="funnelchart",
             key=key or self._new_text_id("funnelchart"),
@@ -3042,6 +4755,34 @@ class RLBuilder(RouteLitBuilder):
         with_tooltip: Optional[bool] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Pie chart to visualize parts of a whole.
+
+        Args:
+            data (list): Dataset.
+            end_angle (Optional[int]): End angle.
+            key (Optional[str]): Explicit element key.
+            label_color (Optional[str]): Label color.
+            labels_position (Optional[Literal["outside","inside"]]): Labels position.
+            labels_type (Optional[Literal["value","percent"]]): Label content.
+            padding_angle (Optional[int]): Angle between segments.
+            pie_chart_props (Optional[dict[str, Any]]): Chart container props.
+            pie_props (Optional[dict[str, Any]]): Pie props.
+            size (Optional[int]): Chart size.
+            start_angle (Optional[int]): Start angle.
+            stroke_color (Optional[str]): Border color.
+            stroke_width (Optional[int]): Border width.
+            tooltip_animation_duration (Optional[int]): Tooltip animation duration.
+            tooltip_data_source (Optional[Literal["all","segment"]]): Tooltip data source.
+            tooltip_props (Optional[dict[str, Any]]): Tooltip props.
+            with_labels (Optional[bool]): Show labels.
+            with_labels_line (Optional[bool]): Show label connector lines.
+            with_tooltip (Optional[bool]): Show tooltip.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the pie chart element.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="piechart",
             key=key or self._new_text_id("piechart"),
@@ -3095,6 +4836,37 @@ class RLBuilder(RouteLitBuilder):
         with_tooltip: Optional[bool] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Radar chart for multi-dimensional categorical data.
+
+        Args:
+            data (list): Dataset.
+            data_key (str): Key for category labels.
+            series (list[dict[str, Any]]): Series configuration.
+            active_dot_props (Optional[dict[str, Any]]): Active dot props.
+            dot_props (Optional[dict[str, Any]]): Dot props.
+            grid_color (Optional[str]): Grid color.
+            key (Optional[str]): Explicit element key.
+            legend_props (Optional[dict[str, Any]]): Legend props.
+            polar_angle_axis_props (Optional[dict[str, Any]]): Polar angle axis props.
+            polar_grid_props (Optional[dict[str, Any]]): Polar grid props.
+            polar_radius_axis_props (Optional[dict[str, Any]]): Polar radius axis props.
+            radar_chart_props (Optional[dict[str, Any]]): Chart container props.
+            radar_props (Optional[dict[str, Any]]): Radar area/line props.
+            text_color (Optional[str]): Text color.
+            tooltip_animation_duration (Optional[int]): Tooltip animation duration.
+            tooltip_props (Optional[dict[str, Any]]): Tooltip props.
+            with_dots (Optional[bool]): Show dots.
+            with_legend (Optional[bool]): Show legend.
+            with_polar_angle_axis (Optional[bool]): Show angle axis.
+            with_polar_grid (Optional[bool]): Show polar grid.
+            with_polar_radius_axis (Optional[bool]): Show radius axis.
+            with_tooltip (Optional[bool]): Show tooltip.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the radar chart element.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="radarchart",
             key=key or self._new_text_id("radarchart"),
@@ -3160,6 +4932,46 @@ class RLBuilder(RouteLitBuilder):
         key: Optional[str] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Scatter chart for visualizing correlation between two variables.
+
+        Args:
+            data (list): Dataset.
+            data_key (dict[str, str]): Mapping for x/y keys.
+            grid_axis (Optional[str]): Grid axis.
+            grid_color (Optional[str]): Grid color.
+            grid_props (Optional[dict[str, Any]]): Grid props.
+            labels (Optional[dict[str, str]]): Axis labels.
+            legend_props (Optional[dict[str, Any]]): Legend props.
+            orientation (Optional[str]): Orientation.
+            point_labels (Optional[str]): Point labels key.
+            reference_lines (Optional[list[dict[str, Any]]]): Reference lines.
+            right_y_axis_label (Optional[str]): Secondary Y axis label.
+            right_y_axis_props (Optional[dict[str, Any]]): Secondary Y axis props.
+            scatter_chart_props (Optional[dict[str, Any]]): Chart container props.
+            scatter_props (Optional[dict[str, Any]]): Scatter props.
+            stroke_dasharray (Optional[Union[str, int]]): Stroke dash pattern.
+            text_color (Optional[str]): Text color.
+            tick_line (Optional[str]): Tick line display.
+            tooltip_animation_duration (Optional[int]): Tooltip animation duration.
+            tooltip_props (Optional[dict[str, Any]]): Tooltip props.
+            unit (Optional[dict[str, str]]): Axis units.
+            value_formatter (Optional[Any]): Value formatter.
+            with_legend (Optional[bool]): Show legend.
+            with_right_y_axis (Optional[bool]): Enable right Y axis.
+            with_tooltip (Optional[bool]): Show tooltip.
+            with_x_axis (Optional[bool]): Show X axis.
+            with_y_axis (Optional[bool]): Show Y axis.
+            x_axis_label (Optional[str]): X axis label.
+            x_axis_props (Optional[dict[str, Any]]): X axis props.
+            y_axis_label (Optional[str]): Y axis label.
+            y_axis_props (Optional[dict[str, Any]]): Y axis props.
+            key (Optional[str]): Explicit element key.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the scatter chart element.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="scatterchart",
             key=key or self._new_text_id("scatterchart"),
@@ -3217,6 +5029,29 @@ class RLBuilder(RouteLitBuilder):
         z_axis_props: Optional[dict[str, Any]] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Bubble chart for three-dimensional data (x, y, z-size).
+
+        Args:
+            data (list[dict[str, Any]]): Dataset with x, y, z.
+            data_key (dict[str, str]): Mapping for x/y/z keys.
+            range (tuple[int, int]): Bubble size range.
+            color (Optional[str]): Bubble color.
+            grid_color (Optional[str]): Grid color.
+            key (Optional[str]): Explicit element key.
+            label (Optional[str]): Series label.
+            scatter_props (Optional[dict[str, Any]]): Scatter props.
+            text_color (Optional[str]): Text color.
+            tooltip_props (Optional[dict[str, Any]]): Tooltip props.
+            with_tooltip (Optional[bool]): Show tooltip.
+            x_axis_props (Optional[dict[str, Any]]): X axis props.
+            y_axis_props (Optional[dict[str, Any]]): Y axis props.
+            z_axis_props (Optional[dict[str, Any]]): Z axis props.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the bubble chart element.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="bubblechart",
             key=key or self._new_text_id("bubblechart"),
@@ -3258,6 +5093,30 @@ class RLBuilder(RouteLitBuilder):
         with_tooltip: Optional[bool] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Radial bar chart for circular bar visualizations.
+
+        Args:
+            data (list[dict[str, Any]]): Dataset.
+            data_key (str): Value key.
+            bar_size (Optional[int]): Bar thickness.
+            empty_background_color (Optional[str]): Empty background color.
+            end_angle (Optional[int]): End angle.
+            key (Optional[str]): Explicit element key.
+            legend_props (Optional[dict[str, Any]]): Legend props.
+            radial_bar_chart_props (Optional[dict[str, Any]]): Chart container props.
+            radial_bar_props (Optional[dict[str, Any]]): Bar props.
+            start_angle (Optional[int]): Start angle.
+            tooltip_props (Optional[dict[str, Any]]): Tooltip props.
+            with_background (Optional[bool]): Show circular background.
+            with_labels (Optional[bool]): Show labels.
+            with_legend (Optional[bool]): Show legend.
+            with_tooltip (Optional[bool]): Show tooltip.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the radial bar chart element.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="radialbarchart",
             key=key or self._new_text_id("radialbarchart"),
@@ -3295,6 +5154,25 @@ class RLBuilder(RouteLitBuilder):
         with_gradient: Optional[bool] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Compact sparkline chart for trends.
+
+        Args:
+            data (list[Union[int, float, None]]): Dataset.
+            area_props (Optional[dict[str, Any]]): Area props.
+            color (Optional[str]): Line/area color.
+            connect_nulls (Optional[bool]): Connect across null values.
+            curve_type (Optional[str]): Curve interpolation type.
+            fill_opacity (Optional[float]): Area fill opacity.
+            key (Optional[str]): Explicit element key.
+            stroke_width (Optional[int]): Line width.
+            trend_colors (Optional[dict[str, Any]]): Trend color overrides.
+            with_gradient (Optional[bool]): Fill with gradient.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the sparkline element.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="sparkline",
             key=key or self._new_text_id("sparkline"),
@@ -3339,6 +5217,37 @@ class RLBuilder(RouteLitBuilder):
         with_weekday_labels: Optional[bool] = None,
         **kwargs: Any,
     ) -> "RLBuilder":
+        """
+        Calendar heatmap for visualizing value intensity over dates.
+
+        Args:
+            data (dict[str, Union[int, float]]): Mapping of ISO date -> value.
+            colors (Optional[list[str]]): Color scale.
+            domain (Optional[tuple[Union[int, float], Union[int, float]]]): Min/max domain.
+            end_date (Optional[Union[str, Any]]): End date.
+            first_day_of_week (Optional[int]): First day of the week.
+            font_size (Optional[int]): Font size for labels.
+            gap (Optional[int]): Gap between cells.
+            get_rect_props (Optional[Any]): Custom rect props callback.
+            get_tooltip_label (Optional[Any]): Tooltip label callback.
+            key (Optional[str]): Explicit element key.
+            month_labels (Optional[list[str]]): Month labels.
+            months_labels_height (Optional[int]): Month labels height.
+            rect_radius (Optional[int]): Cell border radius.
+            rect_size (Optional[int]): Cell size.
+            start_date (Optional[Union[str, Any]]): Start date.
+            tooltip_props (Optional[dict[str, Any]]): Tooltip props.
+            weekday_labels (Optional[list[str]]): Weekday labels.
+            weekdays_labels_width (Optional[int]): Weekday labels width.
+            with_month_labels (Optional[bool]): Show month labels.
+            with_outside_dates (Optional[bool]): Show dates outside range.
+            with_tooltip (Optional[bool]): Show tooltip.
+            with_weekday_labels (Optional[bool]): Show weekday labels.
+            kwargs: Additional props to set.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the heatmap element.
+        """
         return self._create_builder_element(  # type: ignore[return-value]
             name="heatmap",
             key=key or self._new_text_id("heatmap"),
