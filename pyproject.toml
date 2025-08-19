@@ -1,6 +1,6 @@
 [project]
 name = "routelit-mantine"
-version = "0.0.1"
+version = "0.1.0"
 description = "This is a routelit library repository for that uses uv for their dependency management."
 authors = [{ name = "Rolando Gómez Tabar", email = "rolangom@gmail.com" }]
 readme = "README.md"
