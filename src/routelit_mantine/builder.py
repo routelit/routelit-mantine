@@ -3418,7 +3418,6 @@ class RLBuilder(RouteLitBuilder):
             chevron_icon_size (Optional[Union[str, int]]): Size of default chevron icon.
             chevron_position (Optional[str]): Position of chevron relative to label.
             chevron_size (Optional[Union[str, int]]): Size of chevron icon container.
-            default_value (Optional[Union[str, list[str]]]): Uncontrolled default value.
             disable_chevron_rotation (Optional[bool]): Disable chevron rotation.
             loop (Optional[bool]): Loop through items with arrow keys.
             multiple (Optional[bool]): Allow multiple items open at once.
@@ -4245,7 +4244,6 @@ class RLBuilder(RouteLitBuilder):
             disabled (Optional[bool]): Sets disabled attribute on input element.
             error (Optional[Any]): Contents of Input.Error component.
             error_props (Optional[dict[str, Any]]): Props passed to Input.Error component.
-            input_container (Optional[Callable[[Any], Any]]): Input container component.
             input_size (Optional[str]): Size attribute for input element.
             input_wrapper_order (Optional[list[str]]): Controls order of elements.
             label_props (Optional[dict[str, Any]]): Props passed to Input.Label component.
