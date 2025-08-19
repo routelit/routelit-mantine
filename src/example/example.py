@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, time, timedelta
 
 from flask import Flask, Response
 from routelit import RouteLit
@@ -698,33 +698,6 @@ def nested_fragment(ui: RLBuilder) -> None:
         ui.text("Hello 8")
 
 
-def view(ui: RLBuilder) -> None:
-    ui.title("RouteLit")
-    ui.text("Hello World")
-
-    navigation_sidebar(ui)
-
-    with ui.expander("Layouts"):
-        layouts_fragment(ui)
-
-    with ui.expander("checkboxes"):
-        checkboxes_fragment(ui)
-    with ui.expander("chips"):
-        chip_fragment(ui)
-    with ui.expander("inputs"):
-        inputs_fragment(ui)
-    with ui.expander("combobox"):
-        combobox_fragment(ui)
-    with ui.expander("buttons"):
-        buttons_fragment(ui)
-    with ui.expander("Navigation"):
-        navigation_fragment(ui)
-    with ui.expander("Feedback"):
-        feedback_fragment(ui)
-    with ui.expander("Overlays"):
-        overlays_fragment(ui)
-
-
 @rl.fragment("sidebar_view")
 def sidebar_view(ui: RLBuilder) -> None:
     ui.set_provider_props(theme={"primaryColor": "green"})
@@ -1011,6 +984,46 @@ def data_display_view(ui: RLBuilder) -> None:
     with ui.sidebar:
         sidebar_view(ui)
     ui.header("Data Display")
+
+    ui.header("Accordion")
+    variant = ui.select(
+        label="Variant",
+        options=[
+            {"label": "Default", "value": "default"},
+            {"label": "Filled", "value": "filled"},
+            {"label": "Separated", "value": "separated"},
+            {"label": "Contained", "value": "contained"},
+            {"label": "Unstyled", "value": "unstyled"},
+        ],
+        value="default",
+    )
+
+    with ui.accordion(variant=variant, chevron=ui.icon("ChevronDown"), chevron_position="left"):
+        with ui.accordion_item(label="Accordion item 1", icon=ui.icon("Apple")):
+            ui.text("Accordion Body item 1")
+        with ui.accordion_item(label="Accordion item 2", chevron=ui.icon("IconCaretDown")):
+            ui.text("Accordion Body item 2")
+        with ui.accordion_item(label="Accordion item 3"):
+            ui.text("Accordion Body item 3")
+
+    ui.hr()
+    with ui.accordion(multiple=True, variant=variant):
+        with ui.accordion_item(label="Accordion item 1", icon=ui.icon("IconAvocado")):
+            ui.text("Accordion Body item 1")
+        with ui.accordion_item(label="Accordion item 2", chevron=ui.icon("IconArrowDown")):
+            ui.text("Accordion Body item 2")
+        with ui.accordion_item(label="Accordion item 3"):
+            ui.text("Accordion Body item 3")
+
+    ui.hr()
+
+    with ui.expander(title="Expander 1", chevron=ui.icon("IconArrowDown"), chevron_position="left", variant="unstyled"):
+        ui.text("Expander Body 1")
+
+    with ui.expander(title="Expander 2", is_open=True, icon=ui.icon("IconStar"), variant="filled"):
+        ui.text("Expander Body 2")
+    ui.hr()
+
     ui.image(src="https://placehold.co/600x400")
     ui.number_formatter(
         value=1000.5,
@@ -1143,6 +1156,24 @@ def dates_view(ui: RLBuilder) -> None:
                 label="Date range picker input", value=(date.today(), date.today() + timedelta(days=1)), type="range"
             )
             ui.text(f"Date range picker input: {date_range2}")
+
+    ui.header("Time input")
+    with ui.group():
+        with ui.container():
+            time_input = ui.time_input(label="Time input", value=time(12, 30))
+            ui.text(f"Time input: {time_input}")
+        with ui.container():
+            time_input2 = ui.time_input(label="Time input 2", value="12:30", left_section=ui.icon("Clock"))
+            ui.text(f"Time input 2: {time_input2}")
+
+    ui.header("Time picker")
+    with ui.group():
+        with ui.container():
+            time_picker = ui.time_picker(label="Time picker", value=time(11, 31), with_seconds=True, with_dropdown=True)
+            ui.text(f"Time picker: {time_picker}")
+        with ui.container():
+            time_picker2 = ui.time_picker(label="Time picker 2", value="10:25", left_section=ui.icon("Clock"))
+            ui.text(f"Time picker 2: {time_picker2}")
 
 
 fruits_data = [

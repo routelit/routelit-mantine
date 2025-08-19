@@ -147,7 +147,12 @@ class RLBuilder(RouteLitBuilder):
         return self._navbar
 
     def container(  # type: ignore[override]
-        self, *, fluid: bool = False, key: Optional[str] = None, size: Optional[str] = None, **kwargs: Any
+        self,
+        *,
+        fluid: bool = False,
+        key: Optional[str] = None,
+        size: Optional[str] = None,
+        **kwargs: Any,
     ) -> "RLBuilder":
         """
         Create a container.
@@ -3385,6 +3390,177 @@ class RLBuilder(RouteLitBuilder):
             virtual=True,
         )
 
+    def accordion(
+        self,
+        value: Optional[Union[list[str], str]] = None,
+        *,
+        key: Optional[str] = None,
+        chevron: Optional[Any] = None,
+        chevron_icon_size: Optional[Union[str, int]] = None,
+        chevron_position: Optional[str] = None,
+        chevron_size: Optional[Union[str, int]] = None,
+        disable_chevron_rotation: Optional[bool] = None,
+        loop: Optional[bool] = None,
+        multiple: Optional[bool] = None,
+        on_change: Optional[Callable[[Any], None]] = None,
+        order: Optional[Literal[2, 3, 4, 5, 6]] = None,
+        radius: Optional[Union[str, int]] = None,
+        transition_duration: Optional[int] = None,
+        variant: Optional[Literal["default", "filled", "separated", "contained", "unstyled"]] = None,
+    ) -> "RLBuilder":
+        """
+        Accordion component.
+
+        Args:
+            value (Optional[Union[list[str], str]]): Controlled component value.
+            key (Optional[str]): Unique key for the component.
+            chevron (Optional[Any]): Custom chevron icon.
+            chevron_icon_size (Optional[Union[str, int]]): Size of default chevron icon.
+            chevron_position (Optional[str]): Position of chevron relative to label.
+            chevron_size (Optional[Union[str, int]]): Size of chevron icon container.
+            default_value (Optional[Union[str, list[str]]]): Uncontrolled default value.
+            disable_chevron_rotation (Optional[bool]): Disable chevron rotation.
+            loop (Optional[bool]): Loop through items with arrow keys.
+            multiple (Optional[bool]): Allow multiple items open at once.
+            on_change (Optional[Callable[[Any], None]]): Called when value changes.
+            order (Optional[Literal[2,3,4,5,6]]): Heading order.
+            radius (Optional[Union[str, int]]): Border radius.
+            transition_duration (Optional[int]): Transition duration in ms.
+            variant (Optional[Literal["default", "filled", "separated", "contained", "unstyled"]]): Visual variant.
+
+        Returns:
+            RLBuilder: A nested builder scoped to the accordion.
+        """
+        return self._create_builder_element(  # type: ignore[return-value]
+            name="accordion",
+            key=key or self._new_text_id("accordion"),
+            props={
+                "defaultValue": value,
+                "chevron": chevron,
+                "chevronIconSize": chevron_icon_size,
+                "chevronPosition": chevron_position,
+                "chevronSize": chevron_size,
+                "disableChevronRotation": disable_chevron_rotation,
+                "loop": loop,
+                "multiple": multiple,
+                "onChange": on_change,
+                "order": order,
+                "radius": radius,
+                "transitionDuration": transition_duration,
+                "variant": variant,
+            },
+            virtual=True,
+        )
+
+    def accordion_item(
+        self,
+        label: str,
+        *,
+        key: Optional[str] = None,
+        chevron: Optional[RouteLitElement] = None,
+        disabled: Optional[bool] = None,
+        icon: Optional[RouteLitElement] = None,
+        **kwargs: Any,
+    ) -> "RLBuilder":
+        """
+        Accordion item component.
+        """
+        item_key = self._new_widget_id("accordionitem", label) if key is None else key
+        accordion_item = self._create_builder_element(
+            name="accordionitem",
+            key=item_key,
+            props={
+                "value": item_key,
+                **kwargs,
+            },
+            virtual=True,
+        )
+        with accordion_item:
+            control_key = self._new_widget_id("accordioncontrol", label) if key is None else key + "-control"
+            self._create_element(
+                "accordioncontrol",
+                key=control_key,
+                props={
+                    "chevron": chevron,
+                    "disabled": disabled,
+                    "icon": icon,
+                    "children": label,
+                },
+                virtual=True,
+            )
+            panel_key = self._new_widget_id("accordionpanel", label) if key is None else key + "-panel"
+            panel = self._create_builder_element(
+                name="accordionpanel",
+                key=panel_key,
+                props={},
+                virtual=True,
+            )
+            return panel  # type: ignore[return-value]
+
+    def expander(
+        self,
+        title: str,
+        *,
+        is_open: Optional[bool] = None,
+        key: Optional[str] = None,
+        chevron: Optional[Any] = None,
+        chevron_icon_size: Optional[Union[str, int]] = None,
+        chevron_position: Optional[str] = None,
+        chevron_size: Optional[Union[str, int]] = None,
+        disabled: Optional[bool] = None,
+        disable_chevron_rotation: Optional[bool] = None,
+        icon: Optional[RouteLitElement] = None,
+        radius: Optional[Union[str, int]] = None,
+        transition_duration: Optional[int] = None,
+        variant: Optional[Literal["default", "filled", "separated", "contained", "unstyled"]] = None,
+        **kwargs: Any,
+    ) -> "RLBuilder":
+        """
+        Expander component.
+        This is a wrapper around the accordion component.
+
+        Args:
+            title (str): Title text shown in the expander header
+            is_open (Optional[bool]): Whether the expander is initially expanded
+            key (Optional[str]): Unique key for the component
+            chevron (Optional[Any]): Custom chevron element
+            chevron_icon_size (Optional[Union[str, int]]): Size of the chevron icon
+            chevron_position (Optional[str]): Position of the chevron icon
+            chevron_size (Optional[Union[str, int]]): Size of the chevron container
+            disabled (Optional[bool]): Whether the expander is disabled
+            disable_chevron_rotation (Optional[bool]): Whether to disable chevron rotation animation
+            icon (Optional[RouteLitElement]): Icon element shown before the title
+            radius (Optional[Union[str, int]]): Border radius
+            transition_duration (Optional[int]): Duration of expand/collapse animation in ms
+            variant (Optional[Literal["default", "filled", "separated", "contained", "unstyled"]]): Visual variant
+            kwargs (Any): Additional props to pass to the accordion component
+
+        Returns:
+            RLBuilder: Builder for the expander content
+        """
+        value = self._new_widget_id("accordionitem", title) if key is None else key
+        accordion = self.accordion(
+            key=key,
+            chevron=chevron,
+            chevron_icon_size=chevron_icon_size,
+            chevron_position=chevron_position,
+            chevron_size=chevron_size,
+            disable_chevron_rotation=disable_chevron_rotation,
+            radius=radius,
+            transition_duration=transition_duration,
+            variant=variant,
+            value=value if is_open else None,
+            **kwargs,
+        )
+        with accordion:
+            item = self.accordion_item(
+                label=title,
+                key=value,
+                disabled=disabled,
+                icon=icon,
+            )
+            return item
+
     def _format_datetime(self, value: Any) -> Optional[datetime.datetime]:
         if isinstance(value, datetime.datetime):
             return value
@@ -3608,7 +3784,12 @@ class RLBuilder(RouteLitBuilder):
         label: str,
         value: Optional[
             Union[
-                datetime.date, str, list[str], list[datetime.date], tuple[str, str], tuple[datetime.date, datetime.date]
+                datetime.date,
+                str,
+                list[str],
+                list[datetime.date],
+                tuple[str, str],
+                tuple[datetime.date, datetime.date],
             ]
         ] = None,
         *,
@@ -3637,7 +3818,16 @@ class RLBuilder(RouteLitBuilder):
         next_label: Optional[str] = None,
         number_of_columns: Optional[int] = None,
         on_change: Optional[
-            Callable[[Union[datetime.date, list[datetime.date], tuple[datetime.date, datetime.date]]], None]
+            Callable[
+                [
+                    Union[
+                        datetime.date,
+                        list[datetime.date],
+                        tuple[datetime.date, datetime.date],
+                    ]
+                ],
+                None,
+            ]
         ] = None,
         presets: Optional[list] = None,
         previous_icon: Optional[RouteLitElement] = None,
@@ -3700,7 +3890,13 @@ class RLBuilder(RouteLitBuilder):
             Optional[Union[datetime.date, list[datetime.date], tuple[datetime.date, datetime.date]]]: Current value.
         """
         return cast(
-            Optional[Union[datetime.date, list[datetime.date], tuple[datetime.date, datetime.date]]],
+            Optional[
+                Union[
+                    datetime.date,
+                    list[datetime.date],
+                    tuple[datetime.date, datetime.date],
+                ]
+            ],
             self._x_input(
                 "datepicker",
                 key or self._new_widget_id("datepicker", label),
@@ -3751,7 +3947,12 @@ class RLBuilder(RouteLitBuilder):
         label: str,
         value: Optional[
             Union[
-                datetime.date, str, list[str], list[datetime.date], tuple[str, str], tuple[datetime.date, datetime.date]
+                datetime.date,
+                str,
+                list[str],
+                list[datetime.date],
+                tuple[str, str],
+                tuple[datetime.date, datetime.date],
             ]
         ] = None,
         *,
@@ -3905,7 +4106,13 @@ class RLBuilder(RouteLitBuilder):
             Optional[Union[datetime.date, list[datetime.date], tuple[datetime.date, datetime.date]]]: Current value.
         """
         return cast(
-            Optional[Union[datetime.date, list[datetime.date], tuple[datetime.date, datetime.date]]],
+            Optional[
+                Union[
+                    datetime.date,
+                    list[datetime.date],
+                    tuple[datetime.date, datetime.date],
+                ]
+            ],
             self._x_input(
                 "datepickerinput",
                 key or self._new_widget_id("datepickerinput", label),
@@ -3992,19 +4199,74 @@ class RLBuilder(RouteLitBuilder):
 
     def time_input(
         self,
-        label: Optional[str] = None,
+        label: str,
         value: Optional[Union[datetime.time, str]] = None,
         *,
         key: Optional[str] = None,
+        on_change: Optional[Callable[[Any], None]] = None,
+        description: Optional[Any] = None,
+        description_props: Optional[dict[str, Any]] = None,
+        disabled: Optional[bool] = None,
+        error: Optional[Any] = None,
+        error_props: Optional[dict[str, Any]] = None,
+        input_size: Optional[str] = None,
+        input_wrapper_order: Optional[list[str]] = None,
+        label_props: Optional[dict[str, Any]] = None,
+        left_section: Optional[Any] = None,
+        left_section_pointer_events: Optional[str] = None,
+        left_section_props: Optional[dict[str, Any]] = None,
+        left_section_width: Optional[Union[str, int]] = None,
+        max_time: Optional[str] = None,
+        min_time: Optional[str] = None,
+        pointer: Optional[bool] = None,
+        radius: Optional[Union[str, int]] = None,
+        required: Optional[bool] = None,
+        right_section: Optional[Any] = None,
+        right_section_pointer_events: Optional[str] = None,
+        right_section_props: Optional[dict[str, Any]] = None,
+        right_section_width: Optional[Union[str, int]] = None,
+        size: Optional[str] = None,
+        with_asterisk: Optional[bool] = None,
+        with_error_styles: Optional[bool] = None,
+        with_seconds: Optional[bool] = None,
+        wrapper_props: Optional[dict[str, Any]] = None,
         **kwargs: Any,
     ) -> Optional[datetime.time]:
         """
         Time input with support for parsing from string.
 
         Args:
-            label (Optional[str]): Field label.
+            label (str): Field label.
             value (Optional[Union[datetime.time, str]]): Current value.
             key (Optional[str]): Explicit element key.
+            on_change (Optional[Callable[[Any], None]]): Change handler.
+            description (Optional[Any]): Contents of Input.Description component.
+            description_props (Optional[dict[str, Any]]): Props passed to Input.Description component.
+            disabled (Optional[bool]): Sets disabled attribute on input element.
+            error (Optional[Any]): Contents of Input.Error component.
+            error_props (Optional[dict[str, Any]]): Props passed to Input.Error component.
+            input_container (Optional[Callable[[Any], Any]]): Input container component.
+            input_size (Optional[str]): Size attribute for input element.
+            input_wrapper_order (Optional[list[str]]): Controls order of elements.
+            label_props (Optional[dict[str, Any]]): Props passed to Input.Label component.
+            left_section (Optional[Any]): Content displayed on left side of input.
+            left_section_pointer_events (Optional[str]): Pointer events style for left section.
+            left_section_props (Optional[dict[str, Any]]): Props for left section element.
+            left_section_width (Optional[Union[str, int]]): Width of left section.
+            max_time (Optional[str]): Maximum possible time value.
+            min_time (Optional[str]): Minimum possible time value.
+            pointer (Optional[bool]): Whether input should have pointer cursor.
+            radius (Optional[Union[str, int]]): Border radius value.
+            required (Optional[bool]): Whether input is required.
+            right_section (Optional[Any]): Content displayed on right side of input.
+            right_section_pointer_events (Optional[str]): Pointer events style for right section.
+            right_section_props (Optional[dict[str, Any]]): Props for right section element.
+            right_section_width (Optional[Union[str, int]]): Width of right section.
+            size (Optional[str]): Controls input height and padding.
+            with_asterisk (Optional[bool]): Whether to show required asterisk.
+            with_error_styles (Optional[bool]): Whether to show error styling.
+            with_seconds (Optional[bool]): Whether to show seconds input.
+            wrapper_props (Optional[dict[str, Any]]): Props for root element.
             kwargs: Additional props to set.
 
         Returns:
@@ -4013,11 +4275,224 @@ class RLBuilder(RouteLitBuilder):
         return cast(
             Optional[datetime.time],
             self._x_input(
-                name="timeinput",
-                key=key or self._new_text_id("timeinput"),
+                "timeinput",
+                key=key or self._new_widget_id("timeinput", label),
                 label=label,
                 value=value,
+                description=description,
+                descriptionProps=description_props,
+                disabled=disabled,
+                error=error,
+                errorProps=error_props,
+                inputSize=input_size,
+                inputWrapperOrder=input_wrapper_order,
+                labelProps=label_props,
+                leftSection=left_section,
+                leftSectionPointerEvents=left_section_pointer_events,
+                leftSectionProps=left_section_props,
+                leftSectionWidth=left_section_width,
+                maxTime=max_time,
+                minTime=min_time,
+                pointer=pointer,
+                radius=radius,
+                required=required,
+                rightSection=right_section,
+                rightSectionPointerEvents=right_section_pointer_events,
+                rightSectionProps=right_section_props,
+                rightSectionWidth=right_section_width,
+                size=size,
+                withAsterisk=with_asterisk,
+                withErrorStyles=with_error_styles,
+                withSeconds=with_seconds,
+                wrapperProps=wrapper_props,
                 rl_format_func=self._format_time,
+                on_change=on_change,
+                **kwargs,
+            ),
+        )
+
+    def time_picker(
+        self,
+        label: str,
+        value: Optional[Union[datetime.time, str]] = None,
+        *,
+        key: Optional[str] = None,
+        on_change: Optional[Callable[[Any], None]] = None,
+        am_pm_input_label: Optional[str] = None,
+        am_pm_labels: Optional[dict[str, str]] = None,
+        am_pm_select_props: Optional[dict[str, Any]] = None,
+        clear_button_props: Optional[dict[str, Any]] = None,
+        clearable: Optional[bool] = None,
+        description: Optional[Any] = None,
+        description_props: Optional[dict[str, Any]] = None,
+        disabled: Optional[bool] = None,
+        error: Optional[Any] = None,
+        error_props: Optional[dict[str, Any]] = None,
+        form: Optional[str] = None,
+        format: Optional[str] = None,  # noqa: A002
+        hidden_input_props: Optional[dict[str, Any]] = None,
+        hours_input_label: Optional[str] = None,
+        hours_input_props: Optional[dict[str, Any]] = None,
+        hours_step: Optional[int] = None,
+        input_size: Optional[str] = None,
+        input_wrapper_order: Optional[list[str]] = None,
+        label_props: Optional[dict[str, Any]] = None,
+        left_section: Optional[Any] = None,
+        left_section_pointer_events: Optional[str] = None,
+        left_section_props: Optional[dict[str, Any]] = None,
+        left_section_width: Optional[Union[str, int]] = None,
+        max: Optional[str] = None,  # noqa: A002
+        max_dropdown_content_height: Optional[int] = None,
+        min: Optional[str] = None,  # noqa: A002
+        minutes_input_label: Optional[str] = None,
+        minutes_input_props: Optional[dict[str, Any]] = None,
+        minutes_step: Optional[int] = None,
+        name: Optional[str] = None,
+        pointer: Optional[bool] = None,
+        popover_props: Optional[dict[str, Any]] = None,
+        presets: Optional[Any] = None,
+        radius: Optional[Union[str, int]] = None,
+        read_only: Optional[bool] = None,
+        required: Optional[bool] = None,
+        right_section: Optional[Any] = None,
+        right_section_pointer_events: Optional[str] = None,
+        right_section_props: Optional[dict[str, Any]] = None,
+        right_section_width: Optional[Union[str, int]] = None,
+        scroll_area_props: Optional[dict[str, Any]] = None,
+        seconds_input_label: Optional[str] = None,
+        seconds_input_props: Optional[dict[str, Any]] = None,
+        seconds_step: Optional[int] = None,
+        size: Optional[str] = None,
+        with_asterisk: Optional[bool] = None,
+        with_dropdown: Optional[bool] = None,
+        with_error_styles: Optional[bool] = None,
+        with_seconds: Optional[bool] = None,
+        wrapper_props: Optional[dict[str, Any]] = None,
+        **kwargs: Any,
+    ) -> Optional[datetime.time]:
+        """
+        Time picker with support for parsing from string.
+
+        Args:
+            label (str): Label text.
+            value (Optional[Union[datetime.time, str]]): Current value.
+            key (Optional[str]): Unique key for the widget.
+            on_change (Optional[Callable[[Any], None]]): Called when value changes.
+            am_pm_input_label (Optional[str]): aria-label of am/pm input.
+            am_pm_labels (Optional[dict[str, str]]): Labels used for am/pm values.
+            am_pm_select_props (Optional[dict[str, Any]]): Props for am/pm select.
+            clear_button_props (Optional[dict[str, Any]]): Props for clear button.
+            clearable (Optional[bool]): Whether clear button should be displayed.
+            description (Optional[Any]): Description content.
+            description_props (Optional[dict[str, Any]]): Props for description.
+            disabled (Optional[bool]): Whether component is disabled.
+            error (Optional[Any]): Error content.
+            error_props (Optional[dict[str, Any]]): Props for error.
+            form (Optional[str]): Form prop for hidden input.
+            format (Optional[str]): Time format ('12h' or '24h').
+            hidden_input_props (Optional[dict[str, Any]]): Props for hidden input.
+            hours_input_label (Optional[str]): aria-label of hours input.
+            hours_input_props (Optional[dict[str, Any]]): Props for hours input.
+            hours_step (Optional[int]): Hours increment/decrement step.
+            input_size (Optional[str]): Size attribute for input element.
+            input_wrapper_order (Optional[list[str]]): Order of elements.
+            label_props (Optional[dict[str, Any]]): Props for label.
+            left_section (Optional[Any]): Left section content.
+            left_section_pointer_events (Optional[str]): Left section pointer events.
+            left_section_props (Optional[dict[str, Any]]): Props for left section.
+            left_section_width (Optional[Union[str, int]]): Left section width.
+            max (Optional[str]): Max time value (hh:mm:ss).
+            max_dropdown_content_height (Optional[int]): Max dropdown height in px.
+            min (Optional[str]): Min time value (hh:mm:ss).
+            minutes_input_label (Optional[str]): aria-label of minutes input.
+            minutes_input_props (Optional[dict[str, Any]]): Props for minutes input.
+            minutes_step (Optional[int]): Minutes increment/decrement step.
+            name (Optional[str]): Name prop for hidden input.
+            pointer (Optional[bool]): Whether to show pointer cursor.
+            popover_props (Optional[dict[str, Any]]): Props for popover.
+            presets (Optional[Any]): Time presets for dropdown.
+            radius (Optional[Union[str, int]]): Border radius.
+            read_only (Optional[bool]): Whether value is read-only.
+            required (Optional[bool]): Whether field is required.
+            right_section (Optional[Any]): Right section content.
+            right_section_pointer_events (Optional[str]): Right section pointer events.
+            right_section_props (Optional[dict[str, Any]]): Props for right section.
+            right_section_width (Optional[Union[str, int]]): Right section width.
+            scroll_area_props (Optional[dict[str, Any]]): Props for scroll areas.
+            seconds_input_label (Optional[str]): aria-label of seconds input.
+            seconds_input_props (Optional[dict[str, Any]]): Props for seconds input.
+            seconds_step (Optional[int]): Seconds increment/decrement step.
+            size (Optional[str]): Controls input height and padding.
+            value (Optional[Union[datetime.time, str]]): Current value.
+            with_asterisk (Optional[bool]): Whether to show required asterisk.
+            with_dropdown (Optional[bool]): Whether to show dropdown.
+            with_error_styles (Optional[bool]): Whether to show error styling.
+            with_seconds (Optional[bool]): Whether to show seconds input.
+            wrapper_props (Optional[dict[str, Any]]): Props for root element.
+            kwargs: Additional props to set.
+
+        Returns:
+            Optional[datetime.time]: Current value.
+        """
+        return cast(
+            Optional[datetime.time],
+            self._x_input(
+                "timepicker",
+                key=key or self._new_widget_id("timepicker", label),
+                label=label,
+                value=value,
+                amPmInputLabel=am_pm_input_label,
+                amPmLabels=am_pm_labels,
+                amPmSelectProps=am_pm_select_props,
+                clearButtonProps=clear_button_props,
+                clearable=clearable,
+                description=description,
+                descriptionProps=description_props,
+                disabled=disabled,
+                error=error,
+                errorProps=error_props,
+                form=form,
+                format=format,
+                hiddenInputProps=hidden_input_props,
+                hoursInputLabel=hours_input_label,
+                hoursInputProps=hours_input_props,
+                hoursStep=hours_step,
+                inputSize=input_size,
+                inputWrapperOrder=input_wrapper_order,
+                labelProps=label_props,
+                leftSection=left_section,
+                leftSectionPointerEvents=left_section_pointer_events,
+                leftSectionProps=left_section_props,
+                leftSectionWidth=left_section_width,
+                max=max,
+                maxDropdownContentHeight=max_dropdown_content_height,
+                min=min,
+                minutesInputLabel=minutes_input_label,
+                minutesInputProps=minutes_input_props,
+                minutesStep=minutes_step,
+                name=name,
+                pointer=pointer,
+                popoverProps=popover_props,
+                presets=presets,
+                radius=radius,
+                readOnly=read_only,
+                required=required,
+                rightSection=right_section,
+                rightSectionPointerEvents=right_section_pointer_events,
+                rightSectionProps=right_section_props,
+                rightSectionWidth=right_section_width,
+                scrollAreaProps=scroll_area_props,
+                secondsInputLabel=seconds_input_label,
+                secondsInputProps=seconds_input_props,
+                secondsStep=seconds_step,
+                size=size,
+                withAsterisk=with_asterisk,
+                withDropdown=with_dropdown,
+                withErrorStyles=with_error_styles,
+                withSeconds=with_seconds,
+                wrapperProps=wrapper_props,
+                rl_format_func=self._format_time,
+                on_change=on_change,
                 **kwargs,
             ),
         )

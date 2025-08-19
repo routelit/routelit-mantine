@@ -52,10 +52,12 @@ import {
   Box,
   Paper,
   ScrollArea,
+  Accordion,
 } from "@mantine/core";
 import {
   DatePicker,
   TimeInput,
+  TimePicker,
   DateTimePicker,
   DatePickerInput,
 } from "@mantine/dates";
@@ -332,6 +334,12 @@ componentStore.register(
   })
 );
 componentStore.register("timeinput",  withValueEventDispatcher(TimeInput, {
+  rlInlineElementsAttrs: [
+    "leftSection",
+    "rightSection",
+  ],
+}));
+componentStore.register("timepicker", withValueEventDispatcher(TimePicker, {
   rlEventValueGetter: idFn,
   rlInlineElementsAttrs: [
     "leftSection",
@@ -362,6 +370,14 @@ componentStore.register(
     ],
   })
 );
+componentStore.register("accordion", withSimpleComponent(Accordion, {
+  rlInlineElementsAttrs: ["chevron"],
+}));
+componentStore.register("accordionitem", Accordion.Item);
+componentStore.register("accordionpanel", Accordion.Panel);
+componentStore.register("accordioncontrol", withSimpleComponent(Accordion.Control, {
+  rlInlineElementsAttrs: ["chevron", "icon"],
+}));
 componentStore.register("areachart", AreaChart);
 componentStore.register("barchart", BarChart);
 componentStore.register("linechart", LineChart);
@@ -376,7 +392,6 @@ componentStore.register("radialbarchart", RadialBarChart);
 componentStore.register("sparkline", Sparkline);
 componentStore.register("heatmap", withCallbackAttributes(Heatmap, {
   rlCallbackAttrs: ["getTooltipLabel"],
-  // @ts-expect-error - getTooltipLabel is not a valid callback attribute
   getTooltipLabel: ({ date, value }) => `${date} | ${value}`,
 }));
 componentStore.forceUpdate();
