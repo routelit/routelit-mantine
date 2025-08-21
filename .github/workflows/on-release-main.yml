@@ -47,6 +47,12 @@ jobs:
         with:
           name: pyproject-toml
 
+      - name: Build frontend
+        run: |
+          cd src/frontend
+          pnpm install
+          pnpm build
+
       - name: Build package
         run: uv build
 
