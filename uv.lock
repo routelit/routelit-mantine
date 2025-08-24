@@ -918,11 +918,11 @@ wheels = [
 
 [[package]]
 name = "routelit"
-version = "0.5.8"
+version = "0.5.9"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/c9/76/93b093a35792cdea8c0570bead431ab7ce3af2dc487eecae611c3a0f7bac/routelit-0.5.8.tar.gz", hash = "sha256:5966201dd8fdaf53d8edfda4b443e6258162fd90434b1c119821b9a706778f3b", size = 119359, upload-time = "2025-08-20T01:32:08.913Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/86/84/fb96dc07a59f9976ef548513ea1433fd112f021faab3c9322042ecf84210/routelit-0.5.9.tar.gz", hash = "sha256:4a111ea3cb3f40fa80068be8f700c548ba323e34a9198c7a7b54c8e859bfd902", size = 119366, upload-time = "2025-08-24T05:43:32.963Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/9d/7a/f4c6a3dd477778b78ed475f9e866850b3cc38566008a96b59d343f985952/routelit-0.5.8-py3-none-any.whl", hash = "sha256:9cee251d6cc67959b09d65cf25dd389b57c346d75d54d9368d62f20717a4670b", size = 36194, upload-time = "2025-08-20T01:32:07.488Z" },
+    { url = "https://files.pythonhosted.org/packages/ad/6b/2172744152eb8f9146d4b8ab31aa854a4d50ae91862418c409eeb61af43f/routelit-0.5.9-py3-none-any.whl", hash = "sha256:a7a04cb08d7cf7433c51521f5122b03dc0791e430322f7ea68e6a80166c3a51a", size = 36202, upload-time = "2025-08-24T05:43:31.793Z" },
 ]
 
 [[package]]
@@ -963,7 +963,7 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "routelit", specifier = ">=0.5.8" }]
+requires-dist = [{ name = "routelit", specifier = ">=0.5.9" }]
 
 [package.metadata.requires-dev]
 dev = [
