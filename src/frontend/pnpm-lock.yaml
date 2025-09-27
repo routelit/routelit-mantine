@@ -33,8 +33,8 @@ dependencies:
     specifier: ^3.1.2
     version: 3.1.2(@types/react@19.1.8)(react-dom@19.0.0)(react-is@19.1.1)(react@19.0.0)(redux@5.0.1)
   routelit-client:
-    specifier: ^0.5.4
-    version: 0.5.4(@types/react@19.1.8)(react-dom@19.0.0)(react@19.0.0)
+    specifier: ^0.5.5
+    version: 0.5.5(@types/react@19.1.8)(react-dom@19.0.0)(react@19.0.0)
 
 devDependencies:
   '@eslint/js':
@@ -2926,8 +2926,8 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /routelit-client@0.5.4(@types/react@19.1.8)(react-dom@19.0.0)(react@19.0.0):
-    resolution: {integrity: sha512-KFIGL+BuzmtZtHluxTkHchHG3ExQAGRtu4YedJy6Mgt2jVFS0TZNGU1uciB0fH60t6eF5YxLSy5Wu6Yd9bErNA==}
+  /routelit-client@0.5.5(@types/react@19.1.8)(react-dom@19.0.0)(react@19.0.0):
+    resolution: {integrity: sha512-ERhezVDApbKjvi+vwtaqi+Etcx0cGNWA0xnrgsKO25D+TKq8PaQA8ZoeH55P+4N+RkiEYAuzbbvZ62WB43BAdg==}
     peerDependencies:
       react: '>=19.0.0'
       react-dom: '>=19.0.0'
