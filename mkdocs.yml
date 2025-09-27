@@ -6,6 +6,7 @@ site_author: Rolando Gómez Tabar
 edit_uri: edit/main/docs/
 repo_name: routelit/routelit-mantine
 copyright: Maintained by <a href="https://x.com/rolangom">rolangom</a>.
+docs_dir: docs
 
 nav:
   - Home: index.md

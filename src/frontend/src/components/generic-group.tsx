@@ -26,7 +26,7 @@ function GenericGroup({
       {children}
       {options && (
         <Flex gap="sm" {...groupProps}>
-          {options?.map((item) => renderItem(item))}
+          {options?.map(renderItem)}
         </Flex>
       )}
     </>
