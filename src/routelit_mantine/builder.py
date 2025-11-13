@@ -110,6 +110,8 @@ class RLBuilder(RouteLitBuilder):
         title: Optional[str] = None,
         logo: Optional[str] = None,
         navbar_props: Optional[dict[str, Any]] = None,
+        *,
+        default_opened_navbar: Optional[bool] = None,
         **kwargs: Any,
     ) -> None:
         """
@@ -122,9 +124,14 @@ class RLBuilder(RouteLitBuilder):
             kwargs: Additional props to set.
         """
         self._app_shell.root_element.props.update(kwargs)
-        self._app_shell.root_element.props["title"] = title
-        self._app_shell.root_element.props["logo"] = logo
-        self._app_shell.root_element.props["navbarProps"] = navbar_props
+        if title is not None:
+            self._app_shell.root_element.props["title"] = title
+        if logo is not None:
+            self._app_shell.root_element.props["logo"] = logo
+        if navbar_props is not None:
+            self._app_shell.root_element.props["navbarProps"] = navbar_props
+        if default_opened_navbar is not None:
+            self._app_shell.root_element.props["defaultOpenedNavbar"] = default_opened_navbar
 
     @property
     def sidebar(self) -> "RLBuilder":

@@ -907,6 +907,7 @@ def sidebar_view(ui: RLBuilder) -> None:
 
 def index_view(ui: RLBuilder) -> None:
     ui.set_page_config(page_title="Home")
+    ui.set_app_shell_props(default_opened_navbar=True)
     with ui.sidebar:
         sidebar_view(ui)
     ui.title("Mantine RouteLit")
@@ -1872,4 +1873,4 @@ def hello() -> Response:
 
 
 if __name__ == "__main__":
-    app.run(debug=True)  # noqa: S201
+    app.run(debug=False)  # noqa: S201

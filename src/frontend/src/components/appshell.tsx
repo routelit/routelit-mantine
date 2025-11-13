@@ -6,17 +6,20 @@ interface RLAppShellProps extends ComponentProps<typeof AppShell> {
   title?: string;
   logo?: string;
   navbarProps?: ComponentProps<typeof AppShell.Navbar>;
+  defaultOpenedNavbar?: boolean;
 }
 
 export function RLAppShell({
   children,
-  title,
+  title = "RouteLit",
   logo,
   navbarProps,
+  defaultOpenedNavbar,
   ...props
 }: React.PropsWithChildren<RLAppShellProps>) {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
-  const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
+  const [desktopOpened, { toggle: toggleDesktop }] =
+    useDisclosure(defaultOpenedNavbar ?? false);
   title = title ?? "RouteLit";
   logo = logo ?? "/routelit/routelit.svg";
   return (

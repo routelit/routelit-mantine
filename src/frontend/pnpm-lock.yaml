@@ -65,8 +65,8 @@ devDependencies:
     specifier: ^15.15.0
     version: 15.15.0
   imports-prefix-vite-plugin:
-    specifier: ^0.1.0
-    version: 0.1.0(@types/node@22.16.5)
+    specifier: ^0.1.1
+    version: 0.1.1(@types/node@22.16.5)
   typescript:
     specifier: ~5.7.2
     version: 5.7.3
@@ -2067,8 +2067,8 @@ packages:
       resolve-from: 4.0.0
     dev: true
 
-  /imports-prefix-vite-plugin@0.1.0(@types/node@22.16.5):
-    resolution: {integrity: sha512-Y8SS0yXZWlDYohS8u3gS+/TvSoz/PsOMZqUOQPfsyMg0HqfHzQmhJ/em2LreQsNfKVUP4LCELdkORNjIxMyJnQ==}
+  /imports-prefix-vite-plugin@0.1.1(@types/node@22.16.5):
+    resolution: {integrity: sha512-Ipsyn2PzUYKyGL0K0iHM3YrHMJCSvFUV0OngMcjCceJSDJQmDgvkfTbC7KFaf9DTF0e+RSeQ4KTsklzTJkovfQ==}
     dependencies:
       vitest: 3.2.4(@types/node@22.16.5)
     transitivePeerDependencies:
