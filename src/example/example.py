@@ -1873,4 +1873,4 @@ def hello() -> Response:
 
 
 if __name__ == "__main__":
-    app.run(debug=False)  # noqa: S201
+    app.run(debug=False)
