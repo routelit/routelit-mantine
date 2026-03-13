@@ -1,6 +1,6 @@
 [project]
 name = "routelit-mantine"
-version = "0.1.4"
+version = "0.1.5"
 description = "This is a routelit library repository for that uses uv for their dependency management."
 authors = [{ name = "Rolando Gómez Tabar", email = "rolangom@gmail.com" }]
 readme = "README.md"
@@ -18,7 +18,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
-    "routelit>=0.5.9",
+    "routelit>=0.6.1",
 ]
 
 

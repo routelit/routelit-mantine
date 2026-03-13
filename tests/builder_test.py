@@ -21,6 +21,8 @@ class MockRLRequest(RouteLitRequest):
         pathname: str = "/test",
         host: str = "localhost",
         method: str = "GET",
+        is_multipart: bool = False,
+        files: Optional[list[Any]] = None,
     ):
         self.headers = headers
         self.path_params = path_params
@@ -33,6 +35,8 @@ class MockRLRequest(RouteLitRequest):
         self.pathname = pathname
         self.host = host
         self._method = method
+        self._is_multipart = is_multipart
+        self._files = files or []
 
     def get_headers(self) -> dict[str, str]:
         return self.headers
@@ -63,6 +67,12 @@ class MockRLRequest(RouteLitRequest):
 
     def get_host(self) -> str:
         return self.host
+
+    def is_multipart(self) -> bool:
+        return self._is_multipart
+
+    def get_files(self) -> Optional[list[Any]]:
+        return self._files if self._files else None
 
     @property
     def method(self) -> str:
